@@ -37,7 +37,7 @@ spec:
       initContainers: {{ include "victoria-metrics.initContiners" . | nindent 8 }}
       {{- end }}
       containers:
-        - name: {{ template "victoria-metrics.name" . }}-{{ $app.name }}
+        - name: server
           {{- if $app.securityContext.enabled }}
           securityContext: {{ include "common.compatibility.renderSecurityContext" (dict "secContext" $app.securityContext "context" .) | nindent 12 }}
           {{- end }}
@@ -146,7 +146,7 @@ spec:
           {{- end }}
         {{- $manager := $app.vmbackupmanager }}
         {{- if $manager.enable }}
-        - name: {{ template "victoria-metrics.name" . }}-vmbackupmanager
+        - name: vmbackupmanager
           image: {{ include "vm.image" (merge (deepCopy $global) (dict "app" $manager)) }}
           imagePullPolicy: "{{ $app.image.pullPolicy }}"
           args:

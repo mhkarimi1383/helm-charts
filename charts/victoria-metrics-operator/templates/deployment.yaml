@@ -30,7 +30,7 @@ spec:
       {{- end }}
       serviceAccountName: {{ template "vm-operator.serviceAccountName" . }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: server
           image: {{ include "vm.image" (merge (deepCopy $global) (dict "app" .Values)) }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           {{- with .Values.envFrom }}

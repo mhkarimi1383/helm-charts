@@ -27,7 +27,7 @@ spec:
       securityContext: {{ include "common.compatibility.renderSecurityContext" (dict "secContext" .Values.podSecurityContext "context" .) | nindent 8 }}
       {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: server
           {{- if .Values.securityContext.enabled }}
           securityContext: {{ include "common.compatibility.renderSecurityContext" (dict "secContext" .Values.securityContext "context" .) | nindent 12 }}
           {{- end }}

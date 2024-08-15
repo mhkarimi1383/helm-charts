@@ -10,6 +10,7 @@
 - Updated `.Values.vmbackupmanager.readinessProbe` to `.Values.vmbackupmanager.probe.readiness`
 - Updated `.Values.vmbackupmanager.livenessProbe` to `.Values.vmbackupmanager.probe.liveness`
 - Updated `.Values.vmbackupmanager.startupProbe` to `.Values.vmbackupmanager.probe.startup`
+- Use static container names in a pod
 
 ## 0.11.23
 

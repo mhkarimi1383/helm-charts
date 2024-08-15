@@ -32,7 +32,7 @@ spec:
       initContainers: {{ toYaml . | nindent 8 }}
       {{- end }}
       containers:
-        - name: {{ template "victoria-metrics.name" . }}-{{ $app.name }}
+        - name: server
           image: {{ include "vm.image" (merge (deepCopy $global) (dict "app" $app)) }}
           imagePullPolicy: "{{ $app.image.pullPolicy }}"
           {{- with $app.containerWorkingDir }}

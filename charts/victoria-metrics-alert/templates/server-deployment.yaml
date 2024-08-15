@@ -43,7 +43,7 @@ spec:
       {{- end }}
       automountServiceAccountToken: {{ .Values.serviceAccount.automountToken }}
       containers:
-        - name: {{ template "vmalert.name" . }}-{{ $app.name }}
+        - name: server
           {{- if $app.securityContext.enabled }}
           securityContext: {{ include "common.compatibility.renderSecurityContext" (dict "secContext" $app.securityContext "context" .) | nindent 12 }}
           {{- end }}

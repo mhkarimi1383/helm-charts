@@ -38,7 +38,7 @@ spec:
       initContainers: {{ include "victoria-logs.initContiners" . | nindent 8 }}
       {{- end }}
       containers:
-        - name: {{ template "victoria-logs.name" . }}-{{ .Values.global.victoriaLogs.server.name }}
+        - name: server
           {{- if $app.securityContext.enabled }}
           securityContext: {{- include "common.compatibility.renderSecurityContext" (dict "secContext" $app.securityContext "context" .) | nindent 12 }}
           {{- end }}

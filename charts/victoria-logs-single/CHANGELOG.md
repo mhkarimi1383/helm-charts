@@ -13,6 +13,7 @@
 - Updated `.Values.server.livenessProbe` to `.Values.server.probe.liveness`
 - Updated `.Values.server.startupProbe` to `.Values.server.probe.startup`
 - Added global imagePullSecrets and image.registry
+- Added `.Values.server.emptyDir` to customize default data directory
 - Use static container names in a pod
 
 ## 0.5.4

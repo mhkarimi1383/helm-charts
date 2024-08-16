@@ -14,6 +14,8 @@
 - Updated `.Values.vmbackupmanager.livenessProbe` to `.Values.vmbackupmanager.probe.liveness`
 - Updated `.Values.vmbackupmanager.startupProbe` to `.Values.vmbackupmanager.probe.startup`
 - Added global imagePullSecrets and image.registry
+- Fix templating of Ingress port when using custom port name.
+- Added `.Values.vmselect.emptyDir` and `.Values.vmstorage.emptyDir` to customize default cache directory
 - Use static container names in a pod
 
 ## 0.11.23

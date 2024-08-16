@@ -10,6 +10,7 @@
 - Set minimal kubernetes version to 1.25
 - Removed support for policy/v1beta1/PodDisruptionBudget
 - Added global imagePullSecrets and image.registry
+- Added `.Values.alertmanager.emptyDir` to customize default cache directory
 - Use static container names in a pod
 
 ## 0.9.12

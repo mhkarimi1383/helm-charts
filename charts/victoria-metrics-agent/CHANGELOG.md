@@ -10,6 +10,7 @@
 - Removed support for policy/v1beta1/PodDisruptionBudget
 - Added params to configure probes `.Values.probe.readiness`, `.Values.probe.liveness` and `.Values.probe.startup`
 - Added global imagePullSecrets and image.registry
+- Added `.Values.emptyDir` to customize default cache directory
 - Use static container names in a pod
 
 ## 0.10.14

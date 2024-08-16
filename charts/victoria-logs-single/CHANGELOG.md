@@ -2,7 +2,9 @@
 
 ## Next release
 
-**Update note**: The VictoriaMetrics components image tag template has been updated. This change introduces `.Values.<component>.image.variant` to specify tag suffixes like `-scratch`, `-cluster`, `-enterprise`. Additionally, you can now omit `.Values.<component>.image.tag` to automatically use the version specified in `.Chart.AppVersion`.
+**Update note 1**: The VictoriaMetrics components image tag template has been updated. This change introduces `.Values.<component>.image.variant` to specify tag suffixes like `-scratch`, `-cluster`, `-enterprise`. Additionally, you can now omit `.Values.<component>.image.tag` to automatically use the version specified in `.Chart.AppVersion`.
+**Update note 2**: Requires Helm 3.14+.
+**Update note 3**: Using static container name instead of dynamically generated one.
 
 - Added basicAuth support for ServiceMonitor
 - Set minimal kubernetes version to 1.25
@@ -10,6 +12,7 @@
 - Updated `.Values.server.readinessProbe` to `.Values.server.probe.readiness`
 - Updated `.Values.server.livenessProbe` to `.Values.server.probe.liveness`
 - Updated `.Values.server.startupProbe` to `.Values.server.probe.startup`
+- Added global imagePullSecrets and image.registry
 - Use static container names in a pod
 
 ## 0.5.4

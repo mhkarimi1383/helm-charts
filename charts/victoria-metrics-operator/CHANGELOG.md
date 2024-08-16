@@ -2,6 +2,9 @@
 
 ## Next release
 
+**Update note 1**: Using static container name instead of dynamically generated one.
+
+- Added global imagePullSecrets and image.registry
 - Use static container names in a pod
 
 ## 0.34.0

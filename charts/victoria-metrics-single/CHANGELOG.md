@@ -2,6 +2,9 @@
 
 ## Next release
 
+**Update note 1**: Requires Helm 3.14+.
+**Update note 2**: Using static container name instead of dynamically generated one.
+
 - Added basicAuth support for ServiceMonitor
 - fix inconsistent relabeling `target_label` in default scrape config.
 - Removed PodSecurityPolicy
@@ -14,6 +17,7 @@
 - Updated `.Values.server.readinessProbe` to `.Values.server.probe.readiness`
 - Updated `.Values.server.livenessProbe` to `.Values.server.probe.liveness`
 - Updated `.Values.server.startupProbe` to `.Values.server.probe.startup`
+- Added global imagePullSecrets and image.registry
 - Use static container names in a pod
 
 ## 0.9.26

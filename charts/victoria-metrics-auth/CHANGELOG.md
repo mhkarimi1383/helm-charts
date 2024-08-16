@@ -2,11 +2,15 @@
 
 ## Next release
 
+**Update note 1**: Requires Helm 3.14+.
+**Update note 2**: Using static container name instead of dynamically generated one.
+
 - Added basicAuth support for ServiceMonitor
 - Removed PodSecurityPolicy
 - Set minimal kubernetes version to 1.25
 - Removed support for policy/v1beta1/PodDisruptionBudget
 - Added params to configure probes `.Values.probe.readiness`, `.Values.probe.liveness` and `.Values.probe.startup`
+- Added global imagePullSecrets and image.registry
 - Use static container names in a pod
 
 ## 0.4.14

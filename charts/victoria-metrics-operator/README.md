@@ -275,7 +275,7 @@ true
 []
 </pre>
 </td>
-			<td>extra settings for the operator deployment. full list Ref: [https://github.com/VictoriaMetrics/operator/blob/master/vars.MD](https://github.com/VictoriaMetrics/operator/blob/master/vars.MD)</td>
+			<td>extra settings for the operator deployment. Full list <a href="https://docs.victoriametrics.com/operator/vars">here</a></td>
 		</tr>
 		<tr>
 			<td>envFrom</td>
@@ -359,6 +359,37 @@ true
 			<td>Overrides the full name of server component</td>
 		</tr>
 		<tr>
+			<td>global.image.registry</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.imagePullSecrets</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>image</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+pullPolicy: IfNotPresent
+registry: ""
+repository: victoriametrics/operator
+tag: ""
+variant: ""
+</pre>
+</td>
+			<td>operator image configuration</td>
+		</tr>
+		<tr>
 			<td>image.pullPolicy</td>
 			<td>string</td>
 			<td><pre lang="">
@@ -395,15 +426,6 @@ victoriametrics/operator
 			<td>Image tag override Chart.AppVersion</td>
 		</tr>
 		<tr>
-			<td>image.variant</td>
-			<td>string</td>
-			<td><pre lang="">
-""
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
 			<td>imagePullSecrets</td>
 			<td>list</td>
 			<td><pre lang="plaintext">
@@ -437,7 +459,7 @@ info
 {}
 </pre>
 </td>
-			<td>Pod's node selector. Ref: [https://kubernetes.io/docs/user-guide/node-selection/](https://kubernetes.io/docs/user-guide/node-selection/</td>
+			<td>Pod's node selector. Details are <a href="https://kubernetes.io/docs/user-guide/node-selection/">here</a></td>
 		</tr>
 		<tr>
 			<td>operator.disable_prometheus_converter</td>
@@ -512,112 +534,34 @@ false
 			<td></td>
 		</tr>
 		<tr>
-			<td>probe.liveness.failureThreshold</td>
-			<td>int</td>
-			<td><pre lang="">
-3
+			<td>probe.liveness</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+failureThreshold: 3
+initialDelaySeconds: 5
+periodSeconds: 15
+tcpSocket:
+    port: probe
+timeoutSeconds: 5
 </pre>
 </td>
-			<td></td>
+			<td>Liveness probe</td>
 		</tr>
 		<tr>
-			<td>probe.liveness.initialDelaySeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-5
+			<td>probe.readiness</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+failureThreshold: 3
+httpGet:
+    path: '{{ include "vm.probe.http.path" . }}'
+    port: probe
+    scheme: '{{ include "vm.probe.http.scheme" . }}'
+initialDelaySeconds: 5
+periodSeconds: 15
+timeoutSeconds: 5
 </pre>
 </td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>probe.liveness.periodSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-15
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>probe.liveness.tcpSocket.port</td>
-			<td>string</td>
-			<td><pre lang="">
-probe
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>probe.liveness.timeoutSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-5
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>probe.readiness.failureThreshold</td>
-			<td>int</td>
-			<td><pre lang="">
-3
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>probe.readiness.httpGet.path</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ include "vm.probe.http.path" . }}'
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>probe.readiness.httpGet.port</td>
-			<td>string</td>
-			<td><pre lang="">
-probe
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>probe.readiness.httpGet.scheme</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ include "vm.probe.http.scheme" . }}'
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>probe.readiness.initialDelaySeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-5
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>probe.readiness.periodSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-15
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>probe.readiness.timeoutSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-5
-</pre>
-</td>
-			<td></td>
+			<td>Readiness probe</td>
 		</tr>
 		<tr>
 			<td>probe.startup</td>
@@ -626,7 +570,7 @@ probe
 {}
 </pre>
 </td>
-			<td></td>
+			<td>Startup probe</td>
 		</tr>
 		<tr>
 			<td>rbac.aggregatedClusterRoles</td>
@@ -727,7 +671,7 @@ relabelings: []
 []
 </pre>
 </td>
-			<td>Array of tolerations object. Ref: [https://kubernetes.io/docs/concepts/configuration/assign-pod-node/](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/)</td>
+			<td>Array of tolerations object. Spec is <a href="https://kubernetes.io/docs/concepts/configuration/assign-pod-node/">here</a></td>
 		</tr>
 		<tr>
 			<td>topologySpreadConstraints</td>
@@ -736,7 +680,7 @@ relabelings: []
 []
 </pre>
 </td>
-			<td>Pod Topology Spread Constraints. Ref: [https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/)</td>
+			<td>Pod Topology Spread Constraints. Spec is <a href="https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/">here</a></td>
 		</tr>
 		<tr>
 			<td>watchNamespace</td>
@@ -749,3 +693,4 @@ relabelings: []
 		</tr>
 	</tbody>
 </table>
+

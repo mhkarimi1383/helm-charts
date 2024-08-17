@@ -130,43 +130,44 @@ Change the values according to the need of the environment in ``victoria-logs-si
 		</tr>
 		<tr>
 			<td>fluent-bit.config.filters</td>
-			<td>string</td>
-			<td><pre lang="">
-|
-    [FILTER]
-        Name kubernetes
-        Match kube.*
-        Merge_Log On
-        Keep_Log On
-        K8S-Logging.Parser On
-        K8S-Logging.Exclude On
-    [FILTER]
-        Name                nest
-        Match               *
-        Wildcard            pod_name
-        Operation lift
-        Nested_under kubernetes
-        Add_prefix   kubernetes_
+			<td>tpl </td>
+			<td><pre lang="tpl ">
+[FILTER]
+    Name kubernetes
+    Match kube.*
+    Merge_Log On
+    Keep_Log On
+    K8S-Logging.Parser On
+    K8S-Logging.Exclude On
+[FILTER]
+    Name                nest
+    Match               *
+    Wildcard            pod_name
+    Operation lift
+    Nested_under kubernetes
+    Add_prefix   kubernetes_
+
 </pre>
 </td>
-			<td></td>
+			<td>FluentBit configuration filters</td>
 		</tr>
 		<tr>
 			<td>fluent-bit.config.outputs</td>
-			<td>string</td>
-			<td><pre lang="">
-|
-    [OUTPUT]
-        Name http
-        Match kube.*
-        Host {{ include "victoria-logs.server.fullname" . }}
-        port 9428
-        compress gzip
-        uri /insert/jsonline?_stream_fields=stream,kubernetes_pod_name,kubernetes_container_name,kubernetes_namespace_name&_msg_field=log&_time_field=date
-        format json_lines
-        json_date_format iso8601
-        header AccountID 0
-        header ProjectID 0
+			<td>tpl</td>
+			<td><pre lang="tpl">
+fluent-bit.config.outputs: |
+  [OUTPUT]
+      Name http
+      Match kube.*
+      Host {{ include "victoria-logs.server.fullname" . }}
+      port 9428
+      compress gzip
+      uri /insert/jsonline?_stream_fields=stream,kubernetes_pod_name,kubernetes_container_name,kubernetes_namespace_name&_msg_field=log&_time_field=date
+      format json_lines
+      json_date_format iso8601
+      header AccountID 0
+      header ProjectID 0
+ 
 </pre>
 </td>
 			<td>Note that Host must be replaced to match your VictoriaLogs service name Default format points to VictoriaLogs service.</td>
@@ -280,6 +281,24 @@ auto
 			<td></td>
 		</tr>
 		<tr>
+			<td>global.image.registry</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.imagePullSecrets</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
 			<td>global.nameOverride</td>
 			<td>string</td>
 			<td><pre lang="">
@@ -313,7 +332,7 @@ server
 false
 </pre>
 </td>
-			<td>See `kubectl explain poddisruptionbudget.spec` for more. Ref: [https://kubernetes.io/docs/tasks/run-application/configure-pdb/](https://kubernetes.io/docs/tasks/run-application/configure-pdb/)</td>
+			<td>See `kubectl explain poddisruptionbudget.spec` for more. Details are <a href="https://kubernetes.io/docs/tasks/run-application/configure-pdb/">here</a></td>
 		</tr>
 		<tr>
 			<td>podDisruptionBudget.extraLabels</td>
@@ -350,6 +369,15 @@ true
 </pre>
 </td>
 			<td>Container workdir</td>
+		</tr>
+		<tr>
+			<td>server.emptyDir</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
 		</tr>
 		<tr>
 			<td>server.enabled</td>
@@ -496,6 +524,15 @@ victorialogs
 			<td></td>
 		</tr>
 		<tr>
+			<td>server.imagePullSecrets</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td>Image pull secrets</td>
+		</tr>
+		<tr>
 			<td>server.ingress.annotations</td>
 			<td>string</td>
 			<td><pre lang="">
@@ -565,7 +602,7 @@ Prefix
 {}
 </pre>
 </td>
-			<td>Pod's node selector. Ref: [https://kubernetes.io/docs/user-guide/node-selection/](https://kubernetes.io/docs/user-guide/node-selection/)</td>
+			<td>Pod's node selector. Details are <a href="https://kubernetes.io/docs/user-guide/node-selection/">here</a></td>
 		</tr>
 		<tr>
 			<td>server.persistentVolume.accessModes</td>
@@ -574,7 +611,7 @@ Prefix
 - ReadWriteOnce
 </pre>
 </td>
-			<td>Array of access modes. Must match those of existing PV or dynamic provisioner. Ref: [http://kubernetes.io/docs/user-guide/persistent-volumes/](http://kubernetes.io/docs/user-guide/persistent-volumes/)</td>
+			<td>Array of access modes. Must match those of existing PV or dynamic provisioner. Details are <a href="http://kubernetes.io/docs/user-guide/persistent-volumes/">here</a></td>
 		</tr>
 		<tr>
 			<td>server.persistentVolume.annotations</td>
@@ -685,7 +722,7 @@ runAsNonRoot: true
 runAsUser: 1000
 </pre>
 </td>
-			<td>Pod's security context. Ref: [https://kubernetes.io/docs/tasks/configure-pod-container/security-context/](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)</td>
+			<td>Pod's security context. Details are <a href="https://kubernetes.io/docs/tasks/configure-pod-container/security-context/">here</a></td>
 		</tr>
 		<tr>
 			<td>server.priorityClassName</td>
@@ -697,112 +734,34 @@ runAsUser: 1000
 			<td>Name of Priority Class</td>
 		</tr>
 		<tr>
-			<td>server.probe.liveness.failureThreshold</td>
-			<td>int</td>
-			<td><pre lang="">
-10
+			<td>server.probe.liveness</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+failureThreshold: 10
+initialDelaySeconds: 30
+periodSeconds: 30
+tcpSocket:
+    port: '{{ include "vm.probe.port" . }}'
+timeoutSeconds: 5
 </pre>
 </td>
-			<td></td>
+			<td>Indicates whether the Container is running. If the liveness probe fails, the kubelet kills the Container, and the Container is subjected to its restart policy. If a Container does not provide a liveness probe, the default state is Success.</td>
 		</tr>
 		<tr>
-			<td>server.probe.liveness.initialDelaySeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-30
+			<td>server.probe.readiness</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+failureThreshold: 3
+httpGet:
+    path: '{{ include "vm.probe.http.path" . }}'
+    port: '{{ include "vm.probe.port" . }}'
+    scheme: '{{ include "vm.probe.http.scheme" . }}'
+initialDelaySeconds: 5
+periodSeconds: 15
+timeoutSeconds: 5
 </pre>
 </td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>server.probe.liveness.periodSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-30
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>server.probe.liveness.tcpSocket.port</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ include "vm.probe.port" . }}'
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>server.probe.liveness.timeoutSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-5
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>server.probe.readiness.failureThreshold</td>
-			<td>int</td>
-			<td><pre lang="">
-3
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>server.probe.readiness.httpGet.path</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ include "vm.probe.http.path" . }}'
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>server.probe.readiness.httpGet.port</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ include "vm.probe.port" . }}'
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>server.probe.readiness.httpGet.scheme</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ include "vm.probe.http.scheme" . }}'
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>server.probe.readiness.initialDelaySeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-5
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>server.probe.readiness.periodSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-15
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>server.probe.readiness.timeoutSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-5
-</pre>
-</td>
-			<td></td>
+			<td>Indicates whether the Container is ready to service requests. If the readiness probe fails, the endpoints controller removes the Pod's IP address from the endpoints of all Services that match the Pod. The default state of readiness before the initial delay is Failure. If a Container does not provide a readiness probe, the default state is Success.</td>
 		</tr>
 		<tr>
 			<td>server.probe.startup</td>
@@ -811,7 +770,7 @@ runAsUser: 1000
 {}
 </pre>
 </td>
-			<td></td>
+			<td>Indicates whether the Container is done with potentially costly initialization. If set it is executed first. If it fails Container is restarted. If it succeeds liveness and readiness probes takes over.</td>
 		</tr>
 		<tr>
 			<td>server.resources</td>
@@ -820,7 +779,7 @@ runAsUser: 1000
 {}
 </pre>
 </td>
-			<td>Resource object. Ref: [http://kubernetes.io/docs/user-guide/compute-resources/](http://kubernetes.io/docs/user-guide/compute-resources/</td>
+			<td>Resource object. Details are <a href="http://kubernetes.io/docs/user-guide/compute-resources/">here</a></td>
 		</tr>
 		<tr>
 			<td>server.retentionPeriod</td>
@@ -870,7 +829,7 @@ readOnlyRootFilesystem: true
 []
 </pre>
 </td>
-			<td>Service External IPs. Ref: [https://kubernetes.io/docs/user-guide/services/#external-ips]( https://kubernetes.io/docs/user-guide/services/#external-ips)</td>
+			<td>Service External IPs. Details are <a href=" https://kubernetes.io/docs/user-guide/services/#external-ips">here</a></td>
 		</tr>
 		<tr>
 			<td>server.service.labels</td>
@@ -1032,7 +991,8 @@ OrderedReady
 []
 </pre>
 </td>
-			<td>Node tolerations for server scheduling to nodes with taints. Ref: [https://kubernetes.io/docs/concepts/configuration/assign-pod-node/](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/)</td>
+			<td>Node tolerations for server scheduling to nodes with taints. Details are <a href="https://kubernetes.io/docs/concepts/configuration/assign-pod-node/">here</a></td>
 		</tr>
 	</tbody>
 </table>
+

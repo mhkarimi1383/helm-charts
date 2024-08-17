@@ -130,1597 +130,251 @@ Change the values according to the need of the environment in ``victoria-metrics
 			<td></td>
 		</tr>
 		<tr>
-			<td>config.scrape_configs[0].job_name</td>
-			<td>string</td>
-			<td><pre lang="">
-vmagent
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[0].static_configs[0].targets[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-localhost:8429
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[1].bearer_token_file</td>
-			<td>string</td>
-			<td><pre lang="">
-/var/run/secrets/kubernetes.io/serviceaccount/token
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[1].job_name</td>
-			<td>string</td>
-			<td><pre lang="">
-kubernetes-apiservers
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[1].kubernetes_sd_configs[0].role</td>
-			<td>string</td>
-			<td><pre lang="">
-endpoints
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[1].relabel_configs[0].action</td>
-			<td>string</td>
-			<td><pre lang="">
-keep
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[1].relabel_configs[0].regex</td>
-			<td>string</td>
-			<td><pre lang="">
-default;kubernetes;https
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[1].relabel_configs[0].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_namespace
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[1].relabel_configs[0].source_labels[1]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_service_name
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[1].relabel_configs[0].source_labels[2]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_endpoint_port_name
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[1].scheme</td>
-			<td>string</td>
-			<td><pre lang="">
-https
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[1].tls_config.ca_file</td>
-			<td>string</td>
-			<td><pre lang="">
-/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[1].tls_config.insecure_skip_verify</td>
-			<td>bool</td>
-			<td><pre lang="">
-true
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[2].bearer_token_file</td>
-			<td>string</td>
-			<td><pre lang="">
-/var/run/secrets/kubernetes.io/serviceaccount/token
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[2].job_name</td>
-			<td>string</td>
-			<td><pre lang="">
-kubernetes-nodes
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[2].kubernetes_sd_configs[0].role</td>
-			<td>string</td>
-			<td><pre lang="">
-node
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[2].relabel_configs[0].action</td>
-			<td>string</td>
-			<td><pre lang="">
-labelmap
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[2].relabel_configs[0].regex</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_node_label_(.+)
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[2].relabel_configs[1].replacement</td>
-			<td>string</td>
-			<td><pre lang="">
-kubernetes.default.svc:443
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[2].relabel_configs[1].target_label</td>
-			<td>string</td>
-			<td><pre lang="">
-__address__
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[2].relabel_configs[2].regex</td>
-			<td>string</td>
-			<td><pre lang="">
-(.+)
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[2].relabel_configs[2].replacement</td>
-			<td>string</td>
-			<td><pre lang="">
-/api/v1/nodes/$1/proxy/metrics
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[2].relabel_configs[2].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_node_name
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[2].relabel_configs[2].target_label</td>
-			<td>string</td>
-			<td><pre lang="">
-__metrics_path__
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[2].scheme</td>
-			<td>string</td>
-			<td><pre lang="">
-https
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[2].tls_config.ca_file</td>
-			<td>string</td>
-			<td><pre lang="">
-/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[2].tls_config.insecure_skip_verify</td>
-			<td>bool</td>
-			<td><pre lang="">
-true
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[3].bearer_token_file</td>
-			<td>string</td>
-			<td><pre lang="">
-/var/run/secrets/kubernetes.io/serviceaccount/token
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[3].honor_timestamps</td>
-			<td>bool</td>
-			<td><pre lang="">
-false
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[3].job_name</td>
-			<td>string</td>
-			<td><pre lang="">
-kubernetes-nodes-cadvisor
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[3].kubernetes_sd_configs[0].role</td>
-			<td>string</td>
-			<td><pre lang="">
-node
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[3].relabel_configs[0].action</td>
-			<td>string</td>
-			<td><pre lang="">
-labelmap
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[3].relabel_configs[0].regex</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_node_label_(.+)
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[3].relabel_configs[1].replacement</td>
-			<td>string</td>
-			<td><pre lang="">
-kubernetes.default.svc:443
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[3].relabel_configs[1].target_label</td>
-			<td>string</td>
-			<td><pre lang="">
-__address__
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[3].relabel_configs[2].regex</td>
-			<td>string</td>
-			<td><pre lang="">
-(.+)
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[3].relabel_configs[2].replacement</td>
-			<td>string</td>
-			<td><pre lang="">
-/api/v1/nodes/$1/proxy/metrics/cadvisor
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[3].relabel_configs[2].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_node_name
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[3].relabel_configs[2].target_label</td>
-			<td>string</td>
-			<td><pre lang="">
-__metrics_path__
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[3].scheme</td>
-			<td>string</td>
-			<td><pre lang="">
-https
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[3].tls_config.ca_file</td>
-			<td>string</td>
-			<td><pre lang="">
-/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[3].tls_config.insecure_skip_verify</td>
-			<td>bool</td>
-			<td><pre lang="">
-true
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].job_name</td>
-			<td>string</td>
-			<td><pre lang="">
-kubernetes-service-endpoints
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].kubernetes_sd_configs[0].role</td>
-			<td>string</td>
-			<td><pre lang="">
-endpointslices
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[0].action</td>
-			<td>string</td>
-			<td><pre lang="">
-drop
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[0].regex</td>
-			<td>bool</td>
-			<td><pre lang="">
-true
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[0].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_pod_container_init
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[10].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_service_name
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[10].target_label</td>
-			<td>string</td>
-			<td><pre lang="">
-service
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[11].replacement</td>
-			<td>string</td>
-			<td><pre lang="">
-${1}
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[11].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_service_name
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[11].target_label</td>
-			<td>string</td>
-			<td><pre lang="">
-job
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[12].action</td>
-			<td>string</td>
-			<td><pre lang="">
-replace
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[12].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_pod_node_name
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[12].target_label</td>
-			<td>string</td>
-			<td><pre lang="">
-node
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[1].action</td>
-			<td>string</td>
-			<td><pre lang="">
-keep_if_equal
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[1].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_service_annotation_prometheus_io_port
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[1].source_labels[1]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_pod_container_port_number
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[2].action</td>
-			<td>string</td>
-			<td><pre lang="">
-keep
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[2].regex</td>
-			<td>bool</td>
-			<td><pre lang="">
-true
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[2].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_service_annotation_prometheus_io_scrape
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[3].action</td>
-			<td>string</td>
-			<td><pre lang="">
-replace
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[3].regex</td>
-			<td>string</td>
-			<td><pre lang="">
-(https?)
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[3].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_service_annotation_prometheus_io_scheme
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[3].target_label</td>
-			<td>string</td>
-			<td><pre lang="">
-__scheme__
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[4].action</td>
-			<td>string</td>
-			<td><pre lang="">
-replace
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[4].regex</td>
-			<td>string</td>
-			<td><pre lang="">
-(.+)
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[4].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_service_annotation_prometheus_io_path
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[4].target_label</td>
-			<td>string</td>
-			<td><pre lang="">
-__metrics_path__
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[5].action</td>
-			<td>string</td>
-			<td><pre lang="">
-replace
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[5].regex</td>
-			<td>string</td>
-			<td><pre lang="">
-([^:]+)(?::\d+)?;(\d+)
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[5].replacement</td>
-			<td>string</td>
-			<td><pre lang="">
-$1:$2
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[5].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__address__
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[5].source_labels[1]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_service_annotation_prometheus_io_port
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[5].target_label</td>
-			<td>string</td>
-			<td><pre lang="">
-__address__
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[6].action</td>
-			<td>string</td>
-			<td><pre lang="">
-labelmap
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[6].regex</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_service_label_(.+)
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[7].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_pod_name
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[7].target_label</td>
-			<td>string</td>
-			<td><pre lang="">
-pod
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[8].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_pod_container_name
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[8].target_label</td>
-			<td>string</td>
-			<td><pre lang="">
-container
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[9].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_namespace
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[4].relabel_configs[9].target_label</td>
-			<td>string</td>
-			<td><pre lang="">
-namespace
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].job_name</td>
-			<td>string</td>
-			<td><pre lang="">
-kubernetes-service-endpoints-slow
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].kubernetes_sd_configs[0].role</td>
-			<td>string</td>
-			<td><pre lang="">
-endpointslices
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[0].action</td>
-			<td>string</td>
-			<td><pre lang="">
-drop
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[0].regex</td>
-			<td>bool</td>
-			<td><pre lang="">
-true
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[0].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_pod_container_init
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[10].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_service_name
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[10].target_label</td>
-			<td>string</td>
-			<td><pre lang="">
-service
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[11].replacement</td>
-			<td>string</td>
-			<td><pre lang="">
-${1}
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[11].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_service_name
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[11].target_label</td>
-			<td>string</td>
-			<td><pre lang="">
-job
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[12].action</td>
-			<td>string</td>
-			<td><pre lang="">
-replace
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[12].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_pod_node_name
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[12].target_label</td>
-			<td>string</td>
-			<td><pre lang="">
-node
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[1].action</td>
-			<td>string</td>
-			<td><pre lang="">
-keep_if_equal
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[1].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_service_annotation_prometheus_io_port
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[1].source_labels[1]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_pod_container_port_number
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[2].action</td>
-			<td>string</td>
-			<td><pre lang="">
-keep
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[2].regex</td>
-			<td>bool</td>
-			<td><pre lang="">
-true
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[2].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_service_annotation_prometheus_io_scrape_slow
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[3].action</td>
-			<td>string</td>
-			<td><pre lang="">
-replace
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[3].regex</td>
-			<td>string</td>
-			<td><pre lang="">
-(https?)
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[3].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_service_annotation_prometheus_io_scheme
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[3].target_label</td>
-			<td>string</td>
-			<td><pre lang="">
-__scheme__
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[4].action</td>
-			<td>string</td>
-			<td><pre lang="">
-replace
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[4].regex</td>
-			<td>string</td>
-			<td><pre lang="">
-(.+)
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[4].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_service_annotation_prometheus_io_path
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[4].target_label</td>
-			<td>string</td>
-			<td><pre lang="">
-__metrics_path__
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[5].action</td>
-			<td>string</td>
-			<td><pre lang="">
-replace
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[5].regex</td>
-			<td>string</td>
-			<td><pre lang="">
-([^:]+)(?::\d+)?;(\d+)
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[5].replacement</td>
-			<td>string</td>
-			<td><pre lang="">
-$1:$2
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[5].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__address__
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[5].source_labels[1]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_service_annotation_prometheus_io_port
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[5].target_label</td>
-			<td>string</td>
-			<td><pre lang="">
-__address__
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[6].action</td>
-			<td>string</td>
-			<td><pre lang="">
-labelmap
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[6].regex</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_service_label_(.+)
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[7].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_pod_name
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[7].target_label</td>
-			<td>string</td>
-			<td><pre lang="">
-pod
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[8].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_pod_container_name
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[8].target_label</td>
-			<td>string</td>
-			<td><pre lang="">
-container
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[9].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_namespace
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].relabel_configs[9].target_label</td>
-			<td>string</td>
-			<td><pre lang="">
-namespace
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].scrape_interval</td>
-			<td>string</td>
-			<td><pre lang="">
-5m
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[5].scrape_timeout</td>
-			<td>string</td>
-			<td><pre lang="">
-30s
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[6].job_name</td>
-			<td>string</td>
-			<td><pre lang="">
-kubernetes-services
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[6].kubernetes_sd_configs[0].role</td>
-			<td>string</td>
-			<td><pre lang="">
-service
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[6].metrics_path</td>
-			<td>string</td>
-			<td><pre lang="">
-/probe
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[6].params.module[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-http_2xx
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[6].relabel_configs[0].action</td>
-			<td>string</td>
-			<td><pre lang="">
-keep
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[6].relabel_configs[0].regex</td>
-			<td>bool</td>
-			<td><pre lang="">
-true
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[6].relabel_configs[0].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_service_annotation_prometheus_io_probe
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[6].relabel_configs[1].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__address__
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[6].relabel_configs[1].target_label</td>
-			<td>string</td>
-			<td><pre lang="">
-__param_target
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[6].relabel_configs[2].replacement</td>
-			<td>string</td>
-			<td><pre lang="">
-blackbox
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[6].relabel_configs[2].target_label</td>
-			<td>string</td>
-			<td><pre lang="">
-__address__
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[6].relabel_configs[3].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__param_target
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[6].relabel_configs[3].target_label</td>
-			<td>string</td>
-			<td><pre lang="">
-instance
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[6].relabel_configs[4].action</td>
-			<td>string</td>
-			<td><pre lang="">
-labelmap
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[6].relabel_configs[4].regex</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_service_label_(.+)
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[6].relabel_configs[5].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_namespace
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[6].relabel_configs[5].target_label</td>
-			<td>string</td>
-			<td><pre lang="">
-namespace
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[6].relabel_configs[6].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_service_name
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[6].relabel_configs[6].target_label</td>
-			<td>string</td>
-			<td><pre lang="">
-service
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[7].job_name</td>
-			<td>string</td>
-			<td><pre lang="">
-kubernetes-pods
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[7].kubernetes_sd_configs[0].role</td>
-			<td>string</td>
-			<td><pre lang="">
-pod
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[7].relabel_configs[0].action</td>
-			<td>string</td>
-			<td><pre lang="">
-drop
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[7].relabel_configs[0].regex</td>
-			<td>bool</td>
-			<td><pre lang="">
-true
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[7].relabel_configs[0].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_pod_container_init
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[7].relabel_configs[1].action</td>
-			<td>string</td>
-			<td><pre lang="">
-keep_if_equal
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[7].relabel_configs[1].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_pod_annotation_prometheus_io_port
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[7].relabel_configs[1].source_labels[1]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_pod_container_port_number
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[7].relabel_configs[2].action</td>
-			<td>string</td>
-			<td><pre lang="">
-keep
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[7].relabel_configs[2].regex</td>
-			<td>bool</td>
-			<td><pre lang="">
-true
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[7].relabel_configs[2].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_pod_annotation_prometheus_io_scrape
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[7].relabel_configs[3].action</td>
-			<td>string</td>
-			<td><pre lang="">
-replace
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[7].relabel_configs[3].regex</td>
-			<td>string</td>
-			<td><pre lang="">
-(.+)
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[7].relabel_configs[3].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_pod_annotation_prometheus_io_path
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[7].relabel_configs[3].target_label</td>
-			<td>string</td>
-			<td><pre lang="">
-__metrics_path__
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[7].relabel_configs[4].action</td>
-			<td>string</td>
-			<td><pre lang="">
-replace
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[7].relabel_configs[4].regex</td>
-			<td>string</td>
-			<td><pre lang="">
-([^:]+)(?::\d+)?;(\d+)
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[7].relabel_configs[4].replacement</td>
-			<td>string</td>
-			<td><pre lang="">
-$1:$2
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[7].relabel_configs[4].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__address__
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[7].relabel_configs[4].source_labels[1]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_pod_annotation_prometheus_io_port
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[7].relabel_configs[4].target_label</td>
-			<td>string</td>
-			<td><pre lang="">
-__address__
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[7].relabel_configs[5].action</td>
-			<td>string</td>
-			<td><pre lang="">
-labelmap
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[7].relabel_configs[5].regex</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_pod_label_(.+)
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[7].relabel_configs[6].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_pod_name
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[7].relabel_configs[6].target_label</td>
-			<td>string</td>
-			<td><pre lang="">
-pod
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[7].relabel_configs[7].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_pod_container_name
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[7].relabel_configs[7].target_label</td>
-			<td>string</td>
-			<td><pre lang="">
-container
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[7].relabel_configs[8].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_namespace
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[7].relabel_configs[8].target_label</td>
-			<td>string</td>
-			<td><pre lang="">
-namespace
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[7].relabel_configs[9].action</td>
-			<td>string</td>
-			<td><pre lang="">
-replace
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[7].relabel_configs[9].source_labels[0]</td>
-			<td>string</td>
-			<td><pre lang="">
-__meta_kubernetes_pod_node_name
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>config.scrape_configs[7].relabel_configs[9].target_label</td>
-			<td>string</td>
-			<td><pre lang="">
-node
-</pre>
-</td>
-			<td></td>
+			<td>config.scrape_configs</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+- job_name: vmagent
+  static_configs:
+    - targets:
+        - localhost:8429
+- bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+  job_name: kubernetes-apiservers
+  kubernetes_sd_configs:
+    - role: endpoints
+  relabel_configs:
+    - action: keep
+      regex: default;kubernetes;https
+      source_labels:
+        - __meta_kubernetes_namespace
+        - __meta_kubernetes_service_name
+        - __meta_kubernetes_endpoint_port_name
+  scheme: https
+  tls_config:
+    ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+    insecure_skip_verify: true
+- bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+  job_name: kubernetes-nodes
+  kubernetes_sd_configs:
+    - role: node
+  relabel_configs:
+    - action: labelmap
+      regex: __meta_kubernetes_node_label_(.+)
+    - replacement: kubernetes.default.svc:443
+      target_label: __address__
+    - regex: (.+)
+      replacement: /api/v1/nodes/$1/proxy/metrics
+      source_labels:
+        - __meta_kubernetes_node_name
+      target_label: __metrics_path__
+  scheme: https
+  tls_config:
+    ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+    insecure_skip_verify: true
+- bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+  honor_timestamps: false
+  job_name: kubernetes-nodes-cadvisor
+  kubernetes_sd_configs:
+    - role: node
+  relabel_configs:
+    - action: labelmap
+      regex: __meta_kubernetes_node_label_(.+)
+    - replacement: kubernetes.default.svc:443
+      target_label: __address__
+    - regex: (.+)
+      replacement: /api/v1/nodes/$1/proxy/metrics/cadvisor
+      source_labels:
+        - __meta_kubernetes_node_name
+      target_label: __metrics_path__
+  scheme: https
+  tls_config:
+    ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+    insecure_skip_verify: true
+- job_name: kubernetes-service-endpoints
+  kubernetes_sd_configs:
+    - role: endpointslices
+  relabel_configs:
+    - action: drop
+      regex: true
+      source_labels:
+        - __meta_kubernetes_pod_container_init
+    - action: keep_if_equal
+      source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_port
+        - __meta_kubernetes_pod_container_port_number
+    - action: keep
+      regex: true
+      source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_scrape
+    - action: replace
+      regex: (https?)
+      source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_scheme
+      target_label: __scheme__
+    - action: replace
+      regex: (.+)
+      source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_path
+      target_label: __metrics_path__
+    - action: replace
+      regex: ([^:]+)(?::\d+)?;(\d+)
+      replacement: $1:$2
+      source_labels:
+        - __address__
+        - __meta_kubernetes_service_annotation_prometheus_io_port
+      target_label: __address__
+    - action: labelmap
+      regex: __meta_kubernetes_service_label_(.+)
+    - source_labels:
+        - __meta_kubernetes_pod_name
+      target_label: pod
+    - source_labels:
+        - __meta_kubernetes_pod_container_name
+      target_label: container
+    - source_labels:
+        - __meta_kubernetes_namespace
+      target_label: namespace
+    - source_labels:
+        - __meta_kubernetes_service_name
+      target_label: service
+    - replacement: ${1}
+      source_labels:
+        - __meta_kubernetes_service_name
+      target_label: job
+    - action: replace
+      source_labels:
+        - __meta_kubernetes_pod_node_name
+      target_label: node
+- job_name: kubernetes-service-endpoints-slow
+  kubernetes_sd_configs:
+    - role: endpointslices
+  relabel_configs:
+    - action: drop
+      regex: true
+      source_labels:
+        - __meta_kubernetes_pod_container_init
+    - action: keep_if_equal
+      source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_port
+        - __meta_kubernetes_pod_container_port_number
+    - action: keep
+      regex: true
+      source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_scrape_slow
+    - action: replace
+      regex: (https?)
+      source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_scheme
+      target_label: __scheme__
+    - action: replace
+      regex: (.+)
+      source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_path
+      target_label: __metrics_path__
+    - action: replace
+      regex: ([^:]+)(?::\d+)?;(\d+)
+      replacement: $1:$2
+      source_labels:
+        - __address__
+        - __meta_kubernetes_service_annotation_prometheus_io_port
+      target_label: __address__
+    - action: labelmap
+      regex: __meta_kubernetes_service_label_(.+)
+    - source_labels:
+        - __meta_kubernetes_pod_name
+      target_label: pod
+    - source_labels:
+        - __meta_kubernetes_pod_container_name
+      target_label: container
+    - source_labels:
+        - __meta_kubernetes_namespace
+      target_label: namespace
+    - source_labels:
+        - __meta_kubernetes_service_name
+      target_label: service
+    - replacement: ${1}
+      source_labels:
+        - __meta_kubernetes_service_name
+      target_label: job
+    - action: replace
+      source_labels:
+        - __meta_kubernetes_pod_node_name
+      target_label: node
+  scrape_interval: 5m
+  scrape_timeout: 30s
+- job_name: kubernetes-services
+  kubernetes_sd_configs:
+    - role: service
+  metrics_path: /probe
+  params:
+    module:
+        - http_2xx
+  relabel_configs:
+    - action: keep
+      regex: true
+      source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_probe
+    - source_labels:
+        - __address__
+      target_label: __param_target
+    - replacement: blackbox
+      target_label: __address__
+    - source_labels:
+        - __param_target
+      target_label: instance
+    - action: labelmap
+      regex: __meta_kubernetes_service_label_(.+)
+    - source_labels:
+        - __meta_kubernetes_namespace
+      target_label: namespace
+    - source_labels:
+        - __meta_kubernetes_service_name
+      target_label: service
+- job_name: kubernetes-pods
+  kubernetes_sd_configs:
+    - role: pod
+  relabel_configs:
+    - action: drop
+      regex: true
+      source_labels:
+        - __meta_kubernetes_pod_container_init
+    - action: keep_if_equal
+      source_labels:
+        - __meta_kubernetes_pod_annotation_prometheus_io_port
+        - __meta_kubernetes_pod_container_port_number
+    - action: keep
+      regex: true
+      source_labels:
+        - __meta_kubernetes_pod_annotation_prometheus_io_scrape
+    - action: replace
+      regex: (.+)
+      source_labels:
+        - __meta_kubernetes_pod_annotation_prometheus_io_path
+      target_label: __metrics_path__
+    - action: replace
+      regex: ([^:]+)(?::\d+)?;(\d+)
+      replacement: $1:$2
+      source_labels:
+        - __address__
+        - __meta_kubernetes_pod_annotation_prometheus_io_port
+      target_label: __address__
+    - action: labelmap
+      regex: __meta_kubernetes_pod_label_(.+)
+    - source_labels:
+        - __meta_kubernetes_pod_name
+      target_label: pod
+    - source_labels:
+        - __meta_kubernetes_pod_container_name
+      target_label: container
+    - source_labels:
+        - __meta_kubernetes_namespace
+      target_label: namespace
+    - action: replace
+      source_labels:
+        - __meta_kubernetes_pod_node_name
+      target_label: node
+</pre>
+</td>
+			<td>scrape configuration. scrape self by default</td>
 		</tr>
 		<tr>
 			<td>configMap</td>
@@ -1759,6 +413,15 @@ true
 			<td></td>
 		</tr>
 		<tr>
+			<td>emptyDir</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
 			<td>env</td>
 			<td>list</td>
 			<td><pre lang="plaintext">
@@ -1777,31 +440,15 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>extraArgs."envflag.enable"</td>
-			<td>string</td>
-			<td><pre lang="">
-"true"
+			<td>extraArgs</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+envflag.enable: "true"
+envflag.prefix: VM_
+loggerFormat: json
 </pre>
 </td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>extraArgs."envflag.prefix"</td>
-			<td>string</td>
-			<td><pre lang="">
-VM_
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>extraArgs.loggerFormat</td>
-			<td>string</td>
-			<td><pre lang="">
-json
-</pre>
-</td>
-			<td></td>
+			<td>vmagent extra command line arguments</td>
 		</tr>
 		<tr>
 			<td>extraContainers</td>
@@ -1846,7 +493,7 @@ json
 []
 </pre>
 </td>
-			<td>Extra scrape configs that will be appended to `config`</td>
+			<td>Extra scrape configs that will be appended to <code>config</code></td>
 		</tr>
 		<tr>
 			<td>extraVolumeMounts</td>
@@ -1880,6 +527,24 @@ json
 			<td>string</td>
 			<td><pre lang="">
 auto
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.image.registry</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.imagePullSecrets</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
 </pre>
 </td>
 			<td></td>
@@ -2243,85 +908,31 @@ true
 			<td>priority class to be assigned to the pod(s)</td>
 		</tr>
 		<tr>
-			<td>probe.liveness.initialDelaySeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-5
+			<td>probe.liveness</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+initialDelaySeconds: 5
+periodSeconds: 15
+tcpSocket:
+    port: '{{ include "vm.probe.port" . }}'
+timeoutSeconds: 5
 </pre>
 </td>
-			<td></td>
+			<td>liveness probe</td>
 		</tr>
 		<tr>
-			<td>probe.liveness.periodSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-15
+			<td>probe.readiness</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+httpGet:
+    path: '{{ include "vm.probe.http.path" . }}'
+    port: '{{ include "vm.probe.port" . }}'
+    scheme: '{{ include "vm.probe.http.scheme" . }}'
+initialDelaySeconds: 5
+periodSeconds: 15
 </pre>
 </td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>probe.liveness.tcpSocket.port</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ include "vm.probe.port" . }}'
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>probe.liveness.timeoutSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-5
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>probe.readiness.httpGet.path</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ include "vm.probe.http.path" . }}'
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>probe.readiness.httpGet.port</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ include "vm.probe.port" . }}'
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>probe.readiness.httpGet.scheme</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ include "vm.probe.http.scheme" . }}'
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>probe.readiness.initialDelaySeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-5
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>probe.readiness.periodSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-15
-</pre>
-</td>
-			<td></td>
+			<td>readiness probe</td>
 		</tr>
 		<tr>
 			<td>probe.startup</td>
@@ -2330,7 +941,7 @@ true
 {}
 </pre>
 </td>
-			<td></td>
+			<td>startup probe</td>
 		</tr>
 		<tr>
 			<td>rbac.annotations</td>
@@ -2366,7 +977,7 @@ true
 false
 </pre>
 </td>
-			<td>if true and `rbac.enabled`, will deploy a Role/Rolebinding instead of a ClusterRole/ClusterRoleBinding</td>
+			<td>if true and <code>rbac.enabled</code>, will deploy a Role/Rolebinding instead of a ClusterRole/ClusterRoleBinding</td>
 		</tr>
 		<tr>
 			<td>remoteWriteUrls</td>
@@ -2622,3 +1233,4 @@ false
 		</tr>
 	</tbody>
 </table>
+

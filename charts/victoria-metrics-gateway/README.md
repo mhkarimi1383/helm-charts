@@ -341,6 +341,24 @@ auto
 			<td></td>
 		</tr>
 		<tr>
+			<td>global.image.registry</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.imagePullSecrets</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
 			<td>image.pullPolicy</td>
 			<td>string</td>
 			<td><pre lang="">
@@ -544,85 +562,31 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>probe.liveness.initialDelaySeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-5
+			<td>probe.liveness</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+initialDelaySeconds: 5
+periodSeconds: 15
+tcpSocket:
+    port: '{{ include "vm.probe.port" . }}'
+timeoutSeconds: 5
 </pre>
 </td>
-			<td></td>
+			<td>liveness probe</td>
 		</tr>
 		<tr>
-			<td>probe.liveness.periodSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-15
+			<td>probe.readiness</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+httpGet:
+    path: '{{ include "vm.probe.http.path" . }}'
+    port: '{{ include "vm.probe.port" . }}'
+    scheme: '{{ include "vm.probe.http.scheme" . }}'
+initialDelaySeconds: 5
+periodSeconds: 15
 </pre>
 </td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>probe.liveness.tcpSocket.port</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ include "vm.probe.port" . }}'
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>probe.liveness.timeoutSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-5
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>probe.readiness.httpGet.path</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ include "vm.probe.http.path" . }}'
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>probe.readiness.httpGet.port</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ include "vm.probe.port" . }}'
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>probe.readiness.httpGet.scheme</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ include "vm.probe.http.scheme" . }}'
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>probe.readiness.initialDelaySeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-5
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>probe.readiness.periodSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-15
-</pre>
-</td>
-			<td></td>
+			<td>readiness probe</td>
 		</tr>
 		<tr>
 			<td>probe.startup</td>
@@ -631,7 +595,7 @@ true
 {}
 </pre>
 </td>
-			<td></td>
+			<td>startup probe</td>
 		</tr>
 		<tr>
 			<td>rateLimiter</td>
@@ -908,3 +872,4 @@ false
 		</tr>
 	</tbody>
 </table>
+

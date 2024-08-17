@@ -33,7 +33,7 @@ serviceAccount:
   # The name of the service account to use. If not set and create is true, a name is generated using the fullname template
   name:
 
-# -- See `kubectl explain poddisruptionbudget.spec` for more. Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
+# -- See <code>kubectl explain poddisruptionbudget.spec</code> for more. Details are <a href="https://kubernetes.io/docs/tasks/run-application/configure-pdb/">here</a>
 podDisruptionBudget:
   enabled: false
   # minAvailable: 1
@@ -102,10 +102,10 @@ annotations: {}
 # -- Annotations to be added to pod
 podAnnotations: {}
 
-# -- NodeSelector configurations. Ref: https://kubernetes.io/docs/user-guide/node-selection/
+# -- NodeSelector configurations. Details are <a href="https://kubernetes.io/docs/user-guide/node-selection/">here</a>
 nodeSelector: {}
 
-# -- Tolerations configurations. Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+# -- Tolerations configurations. Details are <a href="https://kubernetes.io/docs/concepts/configuration/assign-pod-node/">here</a>
 tolerations: []
   # - key: "key"
   #   operator: "Equal|Exists"
@@ -125,21 +125,21 @@ serviceMonitor:
 # https://victoriametrics.com/legal/esa/
 eula: false
 
-# -- Full [vmanomaly config section](https://docs.victoriametrics.com/anomaly-detection/components/)
+# -- Full <a href="https://docs.victoriametrics.com/anomaly-detection/components/">vmanomaly config section</a>
 config:
   # -- Whether to use preset configuration. If not empty, preset name should be specified.
   preset: ""
-  # -- [Scheduler section](https://docs.victoriametrics.com/anomaly-detection/components/scheduler/)
+  # -- <a href="https://docs.victoriametrics.com/anomaly-detection/components/scheduler/">Scheduler section</a>
   schedulers: {}
 
-  # -- [Models section](https://docs.victoriametrics.com/anomaly-detection/components/models/)
+  # -- <a href="https://docs.victoriametrics.com/anomaly-detection/components/models/">Models section</a>
   models: {}
 
-  # -- [Reader section](https://docs.victoriametrics.com/anomaly-detection/components/reader/)
+  # -- <a href="https://docs.victoriametrics.com/anomaly-detection/components/reader/">Reader section</a>
   reader:
     # -- Name of the class needed to enable reading from VictoriaMetrics or Prometheus. VmReader is the default option, if not specified.
     class: "vm"
-    # -- Datasource URL address. Required for example "http://single-victoria-metrics-single-server.default.svc.cluster.local:8428" or "http://cluster-victoria-metrics-cluster-vminsert.default.svc.cluster.local:8480/insert/"
+    # -- Datasource URL address. Required for example <code>http://single-victoria-metrics-single-server.default.svc.cluster.local:8428</code> or <code>http://cluster-victoria-metrics-cluster-vminsert.default.svc.cluster.local:8480/insert/</code>
     datasource_url: ""
     # -- For VictoriaMetrics Cluster version only, tenants are identified by accountID or accountID:projectID. See VictoriaMetrics Cluster multitenancy docs
     tenant_id: ""
@@ -156,14 +156,14 @@ config:
     #    expr: 'sum(rate(vm_http_requests_total{path=~"/api/v1/write|.*insert.*"}[5m])) by (path) > 0'
     #  slow_inserts:
     #    expr: 'sum(rate(vm_slow_row_inserts_total[5m])) / sum(rate(vm_rows_inserted_total[5m]))'
-    # -- Frequency of the points returned. Will be converted to "/query_range?step=%s" param (in seconds). **Required** since 1.9.0.
+    # -- Frequency of the points returned. Will be converted to <code>/query_range?step=%s</code> param (in seconds). <bold>Required</bold> since 1.9.0.
     sampling_period: '1m'
 
-  # -- [Writer section](https://docs.victoriametrics.com/anomaly-detection/components/writer/)
+  # -- <a href="https://docs.victoriametrics.com/anomaly-detection/components/writer/">Writer section</a>
   writer:
     # -- Name of the class needed to enable writing to VictoriaMetrics or Prometheus. VmWriter is the default option, if not specified.
     class: "vm"
-    # -- Datasource URL address. Required for example "http://single-victoria-metrics-single-server.default.svc.cluster.local:8428" or "http://cluster-victoria-metrics-cluster-vminsert.default.svc.cluster.local:8480/insert/"
+    # -- Datasource URL address. Required for example <code>http://single-victoria-metrics-single-server.default.svc.cluster.local:8428</code> or <code>http://cluster-victoria-metrics-cluster-vminsert.default.svc.cluster.local:8480/insert/</code>
     datasource_url: ""
     # -- For VictoriaMetrics Cluster version only, tenants are identified by accountID or accountID:projectID. See VictoriaMetrics Cluster multitenancy docs
     tenant_id: ""
@@ -174,7 +174,7 @@ persistentVolume:
   # -- Create/use Persistent Volume Claim for models dump.
   enabled: false
 
-  # -- Array of access modes. Must match those of existing PV or dynamic provisioner. Ref: [http://kubernetes.io/docs/user-guide/persistent-volumes/](http://kubernetes.io/docs/user-guide/persistent-volumes/)
+  # -- Array of access modes. Must match those of existing PV or dynamic provisioner. Details are <a href="http://kubernetes.io/docs/user-guide/persistent-volumes/">here</a>
   accessModes:
     - ReadWriteOnce
   # -- Persistant volume annotations
@@ -192,7 +192,7 @@ persistentVolume:
   # -- Size of the volume. Should be calculated based on the metrics you send and retention policy you set.
   size: 1Gi
 
-# -- License key configuration for vmanomaly. See [docs](https://docs.victoriametrics.com/vmanomaly.html#licensing)
+# -- License key configuration for vmanomaly. See <a href="https://docs.victoriametrics.com/vmanomaly.html#licensing">docs</a>
 # Required starting from v1.5.0.
 license:
   # -- License key for vmanomaly

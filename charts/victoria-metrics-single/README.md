@@ -136,6 +136,24 @@ auto
 			<td></td>
 		</tr>
 		<tr>
+			<td>global.image.registry</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.imagePullSecrets</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
 			<td>license</td>
 			<td>object</td>
 			<td><pre lang="plaintext">
@@ -191,7 +209,7 @@ name: ""
 false
 </pre>
 </td>
-			<td>See `kubectl explain poddisruptionbudget.spec` for more. Ref: [https://kubernetes.io/docs/tasks/run-application/configure-pdb/](https://kubernetes.io/docs/tasks/run-application/configure-pdb/)</td>
+			<td>See <code>kubectl explain poddisruptionbudget.spec</code> for more. Details are <a href="https://kubernetes.io/docs/tasks/run-application/configure-pdb/">here</a></td>
 		</tr>
 		<tr>
 			<td>podDisruptionBudget.extraLabels</td>
@@ -410,6 +428,15 @@ victoriametrics/victoria-metrics
 			<td></td>
 		</tr>
 		<tr>
+			<td>server.imagePullSecrets</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
 			<td>server.ingress.annotations</td>
 			<td>object</td>
 			<td><pre lang="plaintext">
@@ -488,7 +515,7 @@ server
 {}
 </pre>
 </td>
-			<td>Pod's node selector. Ref: [https://kubernetes.io/docs/user-guide/node-selection/](https://kubernetes.io/docs/user-guide/node-selection/)</td>
+			<td>Pod's node selector. Details are <a href="https://kubernetes.io/docs/user-guide/node-selection/">here</a></td>
 		</tr>
 		<tr>
 			<td>server.persistentVolume.accessModes</td>
@@ -497,7 +524,7 @@ server
 - ReadWriteOnce
 </pre>
 </td>
-			<td>Array of access modes. Must match those of existing PV or dynamic provisioner. Ref: [http://kubernetes.io/docs/user-guide/persistent-volumes/](http://kubernetes.io/docs/user-guide/persistent-volumes/)</td>
+			<td>Array of access modes. Must match those of existing PV or dynamic provisioner. Details are <a href="http://kubernetes.io/docs/user-guide/persistent-volumes/">here</a></td>
 		</tr>
 		<tr>
 			<td>server.persistentVolume.annotations</td>
@@ -605,7 +632,7 @@ OrderedReady
 enabled: true
 </pre>
 </td>
-			<td>Pod's security context. Ref: [https://kubernetes.io/docs/tasks/configure-pod-container/security-context/](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)</td>
+			<td>Pod's security context. Details are <a href="https://kubernetes.io/docs/tasks/configure-pod-container/security-context/">here</a></td>
 		</tr>
 		<tr>
 			<td>server.priorityClassName</td>
@@ -740,7 +767,7 @@ enabled: true
 {}
 </pre>
 </td>
-			<td>Resource object. Ref: [http://kubernetes.io/docs/user-guide/compute-resources/](http://kubernetes.io/docs/user-guide/compute-resources/</td>
+			<td>Resource object. Details are <a href="http://kubernetes.io/docs/user-guide/compute-resources/">here</a></td>
 		</tr>
 		<tr>
 			<td>server.retentionPeriod</td>
@@ -1561,7 +1588,7 @@ scrape_interval: 5m
 scrape_timeout: 30s
 </pre>
 </td>
-			<td>Scrape config for slow service endpoints; same as above, but with a larger timeout and a larger interval  The relabeling allows the actual service scrape endpoint to be configured via the following annotations:  * `prometheus.io/scrape-slow`: Only scrape services that have a value of `true` * `prometheus.io/scheme`: If the metrics endpoint is secured then you will need to set this to `https` & most likely set the `tls_config` of the scrape config. * `prometheus.io/path`: If the metrics path is not `/metrics` override this. * `prometheus.io/port`: If the metrics are exposed on a different port to the service then set this appropriately.</td>
+			<td>Scrape config for slow service endpoints; same as above, but with a larger timeout and a larger interval  The relabeling allows the actual service scrape endpoint to be configured via the following annotations:  <ul>  <li><code>prometheus.io/scrape-slow</code>: Only scrape services that have a value of <code>true</code></li>  <li><code>prometheus.io/scheme</code>: If the metrics endpoint is secured then you will need to set this to <code>https</code> & most likely set the <code>tls_config</code> of the scrape config.</li>  <li><code>prometheus.io/path</code>: If the metrics path is not <code>/metrics</code> override this.</li>  <li><code>prometheus.io/port</code>: If the metrics are exposed on a different port to the service then set this appropriately.</li> </ul></td>
 		</tr>
 		<tr>
 			<td>server.scrape.config.scrape_configs[6]</td>
@@ -1597,7 +1624,7 @@ relabel_configs:
       target_label: service
 </pre>
 </td>
-			<td>Example scrape config for probing services via the Blackbox Exporter.  The relabeling allows the actual service scrape endpoint to be configured via the following annotations:  * `prometheus.io/probe`: Only probe services that have a value of `true`</td>
+			<td>Example scrape config for probing services via the Blackbox Exporter.  The relabeling allows the actual service scrape endpoint to be configured via the following annotations:  <ul> <li><code>prometheus.io/probe</code>: Only probe services that have a value of <code>true</code></li> </ul></td>
 		</tr>
 		<tr>
 			<td>server.scrape.config.scrape_configs[7]</td>
@@ -1643,7 +1670,7 @@ relabel_configs:
       target_label: pod
 </pre>
 </td>
-			<td>Example scrape config for pods  The relabeling allows the actual pod scrape endpoint to be configured via the following annotations:  * `prometheus.io/scrape`: Only scrape pods that have a value of `true` * `prometheus.io/path`: If the metrics path is not `/metrics` override this. * `prometheus.io/port`: Scrape the pod on the indicated port instead of the default of `9102`.</td>
+			<td>Example scrape config for pods  The relabeling allows the actual pod scrape endpoint to be configured via the following annotations:  <ul>  <li><code>prometheus.io/scrape</code>: Only scrape pods that have a value of <code>true</code></li>  <li><code>prometheus.io/path</code>: If the metrics path is not <code>/metrics</code> override this.</li>  <li><code>prometheus.io/port</code>: Scrape the pod on the indicated port instead of the default of <code>9102</code>.</li> </ul></td>
 		</tr>
 		<tr>
 			<td>server.scrape.configMap</td>
@@ -1670,7 +1697,7 @@ false
 []
 </pre>
 </td>
-			<td>Extra scrape configs that will be appended to `server.scrape.config`</td>
+			<td>Extra scrape configs that will be appended to <code>server.scrape.config</code></td>
 		</tr>
 		<tr>
 			<td>server.securityContext</td>
@@ -1706,7 +1733,7 @@ enabled: true
 []
 </pre>
 </td>
-			<td>Service External IPs. Ref: [https://kubernetes.io/docs/user-guide/services/#external-ips]( https://kubernetes.io/docs/user-guide/services/#external-ips)</td>
+			<td>Service External IPs. Details are <a href=" https://kubernetes.io/docs/user-guide/services/#external-ips">here</a></td>
 		</tr>
 		<tr>
 			<td>server.service.labels</td>
@@ -1868,7 +1895,7 @@ OrderedReady
 []
 </pre>
 </td>
-			<td>Node tolerations for server scheduling to nodes with taints. Ref: [https://kubernetes.io/docs/concepts/configuration/assign-pod-node/](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/)</td>
+			<td>Node tolerations for server scheduling to nodes with taints. Details are <a href="https://kubernetes.io/docs/concepts/configuration/assign-pod-node/">here</a></td>
 		</tr>
 		<tr>
 			<td>server.vmbackupmanager.destination</td>
@@ -2209,3 +2236,4 @@ true
 		</tr>
 	</tbody>
 </table>
+

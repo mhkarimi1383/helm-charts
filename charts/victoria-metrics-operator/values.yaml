@@ -5,6 +5,7 @@ global:
 # Default values for victoria-metrics.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
+# -- operator image configuration
 image:
   # -- Image registry
   registry: ""
@@ -110,22 +111,22 @@ resources:
   #   cpu: 80m
   #   memory: 120Mi
 
-# -- Pod's node selector. Ref: [https://kubernetes.io/docs/user-guide/node-selection/](https://kubernetes.io/docs/user-guide/node-selection/
+# -- Pod's node selector. Details are <a href="https://kubernetes.io/docs/user-guide/node-selection/">here</a>
 nodeSelector: {}
 
-# -- Array of tolerations object. Ref: [https://kubernetes.io/docs/concepts/configuration/assign-pod-node/](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/)
+# -- Array of tolerations object. Spec is <a href="https://kubernetes.io/docs/concepts/configuration/assign-pod-node/">here</a>
 tolerations: []
 
 # -- Pod affinity
 affinity: {}
 
-# -- Pod Topology Spread Constraints. Ref: [https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/)
+# -- Pod Topology Spread Constraints. Spec is <a href="https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/">here</a>
 topologySpreadConstraints: []
 
 # -- operator container additional commandline arguments
 extraArgs: {}
 
-# -- extra settings for the operator deployment. full list Ref: [https://github.com/VictoriaMetrics/operator/blob/master/vars.MD](https://github.com/VictoriaMetrics/operator/blob/master/vars.MD)
+# -- extra settings for the operator deployment. Full list <a href="https://docs.victoriametrics.com/operator/vars">here</a>
 env:
   []
   # - name: VM_VMSINGLEDEFAULT_VERSION
@@ -197,7 +198,7 @@ serviceMonitor:
   relabelings: []
 
 probe:
-  # Readiness probe
+  # -- Readiness probe
   readiness:
     httpGet:
       path: '{{ include "vm.probe.http.path" . }}'
@@ -207,7 +208,7 @@ probe:
     periodSeconds: 15
     timeoutSeconds: 5
     failureThreshold: 3
-  # Liveness probe
+  # -- Liveness probe
   liveness:
     tcpSocket:
       port: probe
@@ -215,7 +216,7 @@ probe:
     periodSeconds: 15
     timeoutSeconds: 5
     failureThreshold: 3
-  # Startup probe
+  # -- Startup probe
   startup: {}
 
 # -- Add extra specs dynamically to this chart

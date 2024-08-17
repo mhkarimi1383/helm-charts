@@ -152,7 +152,7 @@ writer:
     tenant_id: ""
 </pre>
 </td>
-			<td>Full [vmanomaly config section](https://docs.victoriametrics.com/anomaly-detection/components/)</td>
+			<td>Full <a href="https://docs.victoriametrics.com/anomaly-detection/components/">vmanomaly config section</a></td>
 		</tr>
 		<tr>
 			<td>config.models</td>
@@ -161,7 +161,7 @@ writer:
 {}
 </pre>
 </td>
-			<td>[Models section](https://docs.victoriametrics.com/anomaly-detection/components/models/)</td>
+			<td><a href="https://docs.victoriametrics.com/anomaly-detection/components/models/">Models section</a></td>
 		</tr>
 		<tr>
 			<td>config.preset</td>
@@ -183,7 +183,7 @@ sampling_period: 1m
 tenant_id: ""
 </pre>
 </td>
-			<td>[Reader section](https://docs.victoriametrics.com/anomaly-detection/components/reader/)</td>
+			<td><a href="https://docs.victoriametrics.com/anomaly-detection/components/reader/">Reader section</a></td>
 		</tr>
 		<tr>
 			<td>config.reader.class</td>
@@ -201,7 +201,7 @@ vm
 ""
 </pre>
 </td>
-			<td>Datasource URL address. Required for example "http://single-victoria-metrics-single-server.default.svc.cluster.local:8428" or "http://cluster-victoria-metrics-cluster-vminsert.default.svc.cluster.local:8480/insert/"</td>
+			<td>Datasource URL address. Required for example <code>http://single-victoria-metrics-single-server.default.svc.cluster.local:8428</code> or <code>http://cluster-victoria-metrics-cluster-vminsert.default.svc.cluster.local:8480/insert/</code></td>
 		</tr>
 		<tr>
 			<td>config.reader.queries</td>
@@ -219,7 +219,7 @@ vm
 1m
 </pre>
 </td>
-			<td>Frequency of the points returned. Will be converted to "/query_range?step=%s" param (in seconds). **Required** since 1.9.0.</td>
+			<td>Frequency of the points returned. Will be converted to <code>/query_range?step=%s</code> param (in seconds). <bold>Required</bold> since 1.9.0.</td>
 		</tr>
 		<tr>
 			<td>config.reader.tenant_id</td>
@@ -237,7 +237,7 @@ vm
 {}
 </pre>
 </td>
-			<td>[Scheduler section](https://docs.victoriametrics.com/anomaly-detection/components/scheduler/)</td>
+			<td><a href="https://docs.victoriametrics.com/anomaly-detection/components/scheduler/">Scheduler section</a></td>
 		</tr>
 		<tr>
 			<td>config.writer</td>
@@ -248,7 +248,7 @@ datasource_url: ""
 tenant_id: ""
 </pre>
 </td>
-			<td>[Writer section](https://docs.victoriametrics.com/anomaly-detection/components/writer/)</td>
+			<td><a href="https://docs.victoriametrics.com/anomaly-detection/components/writer/">Writer section</a></td>
 		</tr>
 		<tr>
 			<td>config.writer.class</td>
@@ -266,7 +266,7 @@ vm
 ""
 </pre>
 </td>
-			<td>Datasource URL address. Required for example "http://single-victoria-metrics-single-server.default.svc.cluster.local:8428" or "http://cluster-victoria-metrics-cluster-vminsert.default.svc.cluster.local:8480/insert/"</td>
+			<td>Datasource URL address. Required for example <code>http://single-victoria-metrics-single-server.default.svc.cluster.local:8428</code> or <code>http://cluster-victoria-metrics-cluster-vminsert.default.svc.cluster.local:8480/insert/</code></td>
 		</tr>
 		<tr>
 			<td>config.writer.tenant_id</td>
@@ -377,6 +377,24 @@ auto
 			<td></td>
 		</tr>
 		<tr>
+			<td>global.image.registry</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.imagePullSecrets</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
 			<td>image.pullPolicy</td>
 			<td>string</td>
 			<td><pre lang="">
@@ -431,7 +449,7 @@ secret:
     name: ""
 </pre>
 </td>
-			<td>License key configuration for vmanomaly. See [docs](https://docs.victoriametrics.com/vmanomaly.html#licensing) Required starting from v1.5.0.</td>
+			<td>License key configuration for vmanomaly. See <a href="https://docs.victoriametrics.com/vmanomaly.html#licensing">docs</a> Required starting from v1.5.0.</td>
 		</tr>
 		<tr>
 			<td>license.key</td>
@@ -486,7 +504,7 @@ name: ""
 {}
 </pre>
 </td>
-			<td>NodeSelector configurations. Ref: https://kubernetes.io/docs/user-guide/node-selection/</td>
+			<td>NodeSelector configurations. Details are <a href="https://kubernetes.io/docs/user-guide/node-selection/">here</a></td>
 		</tr>
 		<tr>
 			<td>persistentVolume</td>
@@ -511,7 +529,7 @@ storageClass: ""
 - ReadWriteOnce
 </pre>
 </td>
-			<td>Array of access modes. Must match those of existing PV or dynamic provisioner. Ref: [http://kubernetes.io/docs/user-guide/persistent-volumes/](http://kubernetes.io/docs/user-guide/persistent-volumes/)</td>
+			<td>Array of access modes. Must match those of existing PV or dynamic provisioner. Details are <a href="http://kubernetes.io/docs/user-guide/persistent-volumes/">here</a></td>
 		</tr>
 		<tr>
 			<td>persistentVolume.annotations</td>
@@ -584,7 +602,7 @@ enabled: false
 labels: {}
 </pre>
 </td>
-			<td>See `kubectl explain poddisruptionbudget.spec` for more. Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/</td>
+			<td>See <code>kubectl explain poddisruptionbudget.spec</code> for more. Details are <a href="https://kubernetes.io/docs/tasks/run-application/configure-pdb/">here</a></td>
 		</tr>
 		<tr>
 			<td>podSecurityContext.enabled</td>
@@ -701,7 +719,8 @@ false
 []
 </pre>
 </td>
-			<td>Tolerations configurations. Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/</td>
+			<td>Tolerations configurations. Details are <a href="https://kubernetes.io/docs/concepts/configuration/assign-pod-node/">here</a></td>
 		</tr>
 	</tbody>
 </table>
+

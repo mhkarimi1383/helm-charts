@@ -115,7 +115,7 @@ Change the values according to the need of the environment in ``victoria-metrics
 cluster.local
 </pre>
 </td>
-			<td>k8s cluster domain suffix, uses for building storage pods' FQDN. Ref: [https://kubernetes.io/docs/tasks/administer-cluster/dns-custom-nameservers/](https://kubernetes.io/docs/tasks/administer-cluster/dns-custom-nameservers/)</td>
+			<td>k8s cluster domain suffix, uses for building storage pods' FQDN. Details are <a href="https://kubernetes.io/docs/tasks/administer-cluster/dns-custom-nameservers/">here</a></td>
 		</tr>
 		<tr>
 			<td>extraObjects</td>
@@ -140,6 +140,24 @@ cluster.local
 			<td>string</td>
 			<td><pre lang="">
 auto
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.image.registry</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.imagePullSecrets</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
 </pre>
 </td>
 			<td></td>
@@ -560,7 +578,7 @@ vminsert
 {}
 </pre>
 </td>
-			<td>Pod's node selector. Ref: [https://kubernetes.io/docs/user-guide/node-selection/](https://kubernetes.io/docs/user-guide/node-selection/)</td>
+			<td>Pod's node selector. Details are <a href="https://kubernetes.io/docs/user-guide/node-selection/">here</a></td>
 		</tr>
 		<tr>
 			<td>vminsert.podAnnotations</td>
@@ -578,7 +596,7 @@ vminsert
 false
 </pre>
 </td>
-			<td>See `kubectl explain poddisruptionbudget.spec` for more. Ref: [https://kubernetes.io/docs/tasks/run-application/configure-pdb/](https://kubernetes.io/docs/tasks/run-application/configure-pdb/)</td>
+			<td>See <code>kubectl explain poddisruptionbudget.spec</code> for more. Details are <a href="https://kubernetes.io/docs/tasks/run-application/configure-pdb/">here</a></td>
 		</tr>
 		<tr>
 			<td>vminsert.podDisruptionBudget.labels</td>
@@ -617,112 +635,34 @@ http
 			<td>Name of Priority Class</td>
 		</tr>
 		<tr>
-			<td>vminsert.probe.liveness.failureThreshold</td>
-			<td>int</td>
-			<td><pre lang="">
-3
+			<td>vminsert.probe.liveness</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+failureThreshold: 3
+initialDelaySeconds: 5
+periodSeconds: 15
+tcpSocket:
+    port: '{{ dig "ports" "name" "http" (.app | dict) }}'
+timeoutSeconds: 5
 </pre>
 </td>
-			<td></td>
+			<td>vminsert liveness probe</td>
 		</tr>
 		<tr>
-			<td>vminsert.probe.liveness.initialDelaySeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-5
+			<td>vminsert.probe.readiness</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+failureThreshold: 3
+httpGet:
+    path: '{{ index .app.extraArgs "http.pathPrefix" | default "" | trimSuffix "/" }}/health'
+    port: '{{ dig "ports" "name" "http" (.app | dict) }}'
+    scheme: '{{ ternary "HTTPS" "HTTP" (.app.extraArgs.tls | default false) }}'
+initialDelaySeconds: 5
+periodSeconds: 15
+timeoutSeconds: 5
 </pre>
 </td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vminsert.probe.liveness.periodSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-15
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vminsert.probe.liveness.tcpSocket.port</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ dig "ports" "name" "http" (.app | dict) }}'
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vminsert.probe.liveness.timeoutSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-5
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vminsert.probe.readiness.failureThreshold</td>
-			<td>int</td>
-			<td><pre lang="">
-3
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vminsert.probe.readiness.httpGet.path</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ index .app.extraArgs "http.pathPrefix" | default "" | trimSuffix "/" }}/health'
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vminsert.probe.readiness.httpGet.port</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ dig "ports" "name" "http" (.app | dict) }}'
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vminsert.probe.readiness.httpGet.scheme</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ ternary "HTTPS" "HTTP" (.app.extraArgs.tls | default false) }}'
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vminsert.probe.readiness.initialDelaySeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-5
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vminsert.probe.readiness.periodSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-15
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vminsert.probe.readiness.timeoutSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-5
-</pre>
-</td>
-			<td></td>
+			<td>vminsert readiness probe</td>
 		</tr>
 		<tr>
 			<td>vminsert.probe.startup</td>
@@ -731,7 +671,7 @@ http
 {}
 </pre>
 </td>
-			<td></td>
+			<td>vminsert startup probe</td>
 		</tr>
 		<tr>
 			<td>vminsert.replicaCount</td>
@@ -758,7 +698,7 @@ http
 enabled: false
 </pre>
 </td>
-			<td>Pod's security context. Ref: [https://kubernetes.io/docs/tasks/configure-pod-container/security-context/](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)</td>
+			<td>Pod's security context. Details are <a href="https://kubernetes.io/docs/tasks/configure-pod-container/security-context/">here</a></td>
 		</tr>
 		<tr>
 			<td>vminsert.service.annotations</td>
@@ -785,7 +725,7 @@ enabled: false
 []
 </pre>
 </td>
-			<td>Service External IPs. Ref: [https://kubernetes.io/docs/user-guide/services/#external-ips]( https://kubernetes.io/docs/user-guide/services/#external-ips)</td>
+			<td>Service External IPs. Details are <a href=" https://kubernetes.io/docs/user-guide/services/#external-ips">here</a></td>
 		</tr>
 		<tr>
 			<td>vminsert.service.extraPorts</td>
@@ -938,7 +878,7 @@ false
 false
 </pre>
 </td>
-			<td>Suppress rendering `--storageNode` FQDNs based on `vmstorage.replicaCount` value. If true suppress rendering `--storageNodes`, they can be re-defined in extraArgs</td>
+			<td>Suppress rendering <code>--storageNode</code> FQDNs based on <code>vmstorage.replicaCount</code> value. If true suppress rendering <code>--storageNodes</code>, they can be re-defined in extraArgs</td>
 		</tr>
 		<tr>
 			<td>vminsert.tolerations</td>
@@ -947,7 +887,7 @@ false
 []
 </pre>
 </td>
-			<td>Array of tolerations object. Ref: [https://kubernetes.io/docs/concepts/configuration/assign-pod-node/](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/)</td>
+			<td>Array of tolerations object. Details are <a href="https://kubernetes.io/docs/concepts/configuration/assign-pod-node/">here</a></td>
 		</tr>
 		<tr>
 			<td>vminsert.topologySpreadConstraints</td>
@@ -1002,6 +942,15 @@ true
 </pre>
 </td>
 			<td>Container workdir</td>
+		</tr>
+		<tr>
+			<td>vmselect.emptyDir</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
 		</tr>
 		<tr>
 			<td>vmselect.enabled</td>
@@ -1280,7 +1229,7 @@ vmselect
 {}
 </pre>
 </td>
-			<td>Pod's node selector. Ref: [https://kubernetes.io/docs/user-guide/node-selection/](https://kubernetes.io/docs/user-guide/node-selection/)</td>
+			<td>Pod's node selector. Details are <a href="https://kubernetes.io/docs/user-guide/node-selection/">here</a></td>
 		</tr>
 		<tr>
 			<td>vmselect.persistentVolume.accessModes</td>
@@ -1289,7 +1238,7 @@ vmselect
 - ReadWriteOnce
 </pre>
 </td>
-			<td>Array of access mode. Must match those of existing PV or dynamic provisioner. Ref: [http://kubernetes.io/docs/user-guide/persistent-volumes/](http://kubernetes.io/docs/user-guide/persistent-volumes/)</td>
+			<td>Array of access mode. Must match those of existing PV or dynamic provisioner. Details are <a href="http://kubernetes.io/docs/user-guide/persistent-volumes/">here</a></td>
 		</tr>
 		<tr>
 			<td>vmselect.persistentVolume.annotations</td>
@@ -1361,7 +1310,7 @@ false
 false
 </pre>
 </td>
-			<td>See `kubectl explain poddisruptionbudget.spec` for more. Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/</td>
+			<td>See <code>kubectl explain poddisruptionbudget.spec</code> for more. Details are <a href="https://kubernetes.io/docs/tasks/run-application/configure-pdb/">here</a></td>
 		</tr>
 		<tr>
 			<td>vmselect.podDisruptionBudget.labels</td>
@@ -1400,112 +1349,34 @@ http
 			<td>Name of Priority Class</td>
 		</tr>
 		<tr>
-			<td>vmselect.probe.liveness.failureThreshold</td>
-			<td>int</td>
-			<td><pre lang="">
-3
+			<td>vmselect.probe.liveness</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+failureThreshold: 3
+initialDelaySeconds: 5
+periodSeconds: 15
+tcpSocket:
+    port: '{{ include "vm.probe.port" . }}'
+timeoutSeconds: 5
 </pre>
 </td>
-			<td></td>
+			<td>vmselect liveness probe</td>
 		</tr>
 		<tr>
-			<td>vmselect.probe.liveness.initialDelaySeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-5
+			<td>vmselect.probe.readiness</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+failureThreshold: 3
+httpGet:
+    path: '{{ include "vm.probe.http.path" . }}'
+    port: '{{ include "vm.probe.port" . }}'
+    scheme: '{{ include "vm.probe.http.scheme" . }}'
+initialDelaySeconds: 5
+periodSeconds: 15
+timeoutSeconds: 5
 </pre>
 </td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vmselect.probe.liveness.periodSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-15
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vmselect.probe.liveness.tcpSocket.port</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ include "vm.probe.port" . }}'
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vmselect.probe.liveness.timeoutSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-5
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vmselect.probe.readiness.failureThreshold</td>
-			<td>int</td>
-			<td><pre lang="">
-3
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vmselect.probe.readiness.httpGet.path</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ include "vm.probe.http.path" . }}'
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vmselect.probe.readiness.httpGet.port</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ include "vm.probe.port" . }}'
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vmselect.probe.readiness.httpGet.scheme</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ include "vm.probe.http.scheme" . }}'
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vmselect.probe.readiness.initialDelaySeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-5
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vmselect.probe.readiness.periodSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-15
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vmselect.probe.readiness.timeoutSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-5
-</pre>
-</td>
-			<td></td>
+			<td>vmselect readiness probe</td>
 		</tr>
 		<tr>
 			<td>vmselect.probe.startup</td>
@@ -1514,7 +1385,7 @@ http
 {}
 </pre>
 </td>
-			<td></td>
+			<td>vmselect startup probe</td>
 		</tr>
 		<tr>
 			<td>vmselect.replicaCount</td>
@@ -1541,7 +1412,7 @@ http
 enabled: true
 </pre>
 </td>
-			<td>Pod's security context. Ref: [https://kubernetes.io/docs/tasks/configure-pod-container/security-context/](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/</td>
+			<td>Pod's security context. Details are <a href="https://kubernetes.io/docs/tasks/configure-pod-container/security-context/">here</a></td>
 		</tr>
 		<tr>
 			<td>vmselect.service.annotations</td>
@@ -1568,7 +1439,7 @@ enabled: true
 []
 </pre>
 </td>
-			<td>Service External IPs. Ref: [https://kubernetes.io/docs/user-guide/services/#external-ips](https://kubernetes.io/docs/user-guide/services/#external-ips)</td>
+			<td>Service External IPs. Details are <a href="https://kubernetes.io/docs/user-guide/services/#external-ips">here</a></td>
 		</tr>
 		<tr>
 			<td>vmselect.service.extraPorts</td>
@@ -1757,7 +1628,7 @@ OrderedReady
 false
 </pre>
 </td>
-			<td>Suppress rendering `--storageNode` FQDNs based on `vmstorage.replicaCount` value. If true suppress rendering `--storageNodes`, they can be re-defined in extraArgs</td>
+			<td>Suppress rendering <code>--storageNode</code> FQDNs based on <code>vmstorage.replicaCount</code> value. If true suppress rendering <code>--storageNodes</code>, they can be re-defined in extraArgs</td>
 		</tr>
 		<tr>
 			<td>vmselect.tolerations</td>
@@ -1766,7 +1637,7 @@ false
 []
 </pre>
 </td>
-			<td>Array of tolerations object. Ref: [https://kubernetes.io/docs/concepts/configuration/assign-pod-node/](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/)</td>
+			<td>Array of tolerations object. Details are <a href="https://kubernetes.io/docs/concepts/configuration/assign-pod-node/">here</a></td>
 		</tr>
 		<tr>
 			<td>vmselect.topologySpreadConstraints</td>
@@ -1812,6 +1683,15 @@ true
 </pre>
 </td>
 			<td>Container workdir</td>
+		</tr>
+		<tr>
+			<td>vmstorage.emptyDir</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
 		</tr>
 		<tr>
 			<td>vmstorage.enabled</td>
@@ -2000,7 +1880,7 @@ vmstorage
 {}
 </pre>
 </td>
-			<td>Pod's node selector. Ref: [https://kubernetes.io/docs/user-guide/node-selection/](https://kubernetes.io/docs/user-guide/node-selection/)</td>
+			<td>Pod's node selector. Details are <a href="https://kubernetes.io/docs/user-guide/node-selection/">here</a></td>
 		</tr>
 		<tr>
 			<td>vmstorage.persistentVolume.accessModes</td>
@@ -2009,7 +1889,7 @@ vmstorage
 - ReadWriteOnce
 </pre>
 </td>
-			<td>Array of access modes. Must match those of existing PV or dynamic provisioner. Ref: [http://kubernetes.io/docs/user-guide/persistent-volumes/](http://kubernetes.io/docs/user-guide/persistent-volumes/)</td>
+			<td>Array of access modes. Must match those of existing PV or dynamic provisioner. Details are <a href="http://kubernetes.io/docs/user-guide/persistent-volumes/">here</a></td>
 		</tr>
 		<tr>
 			<td>vmstorage.persistentVolume.annotations</td>
@@ -2109,7 +1989,7 @@ enabled: false
 labels: {}
 </pre>
 </td>
-			<td>See `kubectl explain poddisruptionbudget.spec` for more. Ref: [https://kubernetes.io/docs/tasks/run-application/configure-pdb/](https://kubernetes.io/docs/tasks/run-application/configure-pdb/)</td>
+			<td>See <code>kubectl explain poddisruptionbudget.spec</code> for more. Details are <a href="https://kubernetes.io/docs/tasks/run-application/configure-pdb/">here</a></td>
 		</tr>
 		<tr>
 			<td>vmstorage.podManagementPolicy</td>
@@ -2148,112 +2028,34 @@ http
 			<td>Name of Priority Class</td>
 		</tr>
 		<tr>
-			<td>vmstorage.probe.liveness.failureThreshold</td>
-			<td>int</td>
-			<td><pre lang="">
-10
+			<td>vmstorage.probe.liveness</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+failureThreshold: 10
+initialDelaySeconds: 30
+periodSeconds: 30
+tcpSocket:
+    port: '{{ include "vm.probe.port" . }}'
+timeoutSeconds: 5
 </pre>
 </td>
-			<td></td>
+			<td>vmstorage liveness probe</td>
 		</tr>
 		<tr>
-			<td>vmstorage.probe.liveness.initialDelaySeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-30
+			<td>vmstorage.probe.readiness</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+failureThreshold: 3
+httpGet:
+    path: '{{ include "vm.probe.http.path" . }}'
+    port: '{{ include "vm.probe.port" . }}'
+    scheme: '{{ include "vm.probe.http.scheme" . }}'
+initialDelaySeconds: 5
+periodSeconds: 15
+timeoutSeconds: 5
 </pre>
 </td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vmstorage.probe.liveness.periodSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-30
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vmstorage.probe.liveness.tcpSocket.port</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ include "vm.probe.port" . }}'
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vmstorage.probe.liveness.timeoutSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-5
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vmstorage.probe.readiness.failureThreshold</td>
-			<td>int</td>
-			<td><pre lang="">
-3
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vmstorage.probe.readiness.httpGet.path</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ include "vm.probe.http.path" . }}'
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vmstorage.probe.readiness.httpGet.port</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ include "vm.probe.port" . }}'
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vmstorage.probe.readiness.httpGet.scheme</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ include "vm.probe.http.scheme" . }}'
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vmstorage.probe.readiness.initialDelaySeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-5
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vmstorage.probe.readiness.periodSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-15
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vmstorage.probe.readiness.timeoutSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-5
-</pre>
-</td>
-			<td></td>
+			<td>vmstorage readiness probe</td>
 		</tr>
 		<tr>
 			<td>vmstorage.probe.startup</td>
@@ -2262,7 +2064,7 @@ http
 {}
 </pre>
 </td>
-			<td></td>
+			<td>vmstorage startup probe</td>
 		</tr>
 		<tr>
 			<td>vmstorage.replicaCount</td>
@@ -2280,7 +2082,7 @@ http
 {}
 </pre>
 </td>
-			<td>Resource object. Ref: [https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)</td>
+			<td>Resource object. Details are <a href="https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/">here</a></td>
 		</tr>
 		<tr>
 			<td>vmstorage.retentionPeriod</td>
@@ -2298,7 +2100,7 @@ http
 enabled: false
 </pre>
 </td>
-			<td>Pod's security context. Ref: [https://kubernetes.io/docs/tasks/configure-pod-container/security-context/](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)</td>
+			<td>Pod's security context. Details are <a href="https://kubernetes.io/docs/tasks/configure-pod-container/security-context/">here</a></td>
 		</tr>
 		<tr>
 			<td>vmstorage.service.annotations</td>
@@ -2433,7 +2235,7 @@ false
 []
 </pre>
 </td>
-			<td>Array of tolerations object. Node tolerations for server scheduling to nodes with taints. Ref: [https://kubernetes.io/docs/concepts/configuration/assign-pod-node/](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) #</td>
+			<td>Array of tolerations object. Node tolerations for server scheduling to nodes with taints. Details are <a href="https://kubernetes.io/docs/concepts/configuration/assign-pod-node/">here</a> #</td>
 		</tr>
 		<tr>
 			<td>vmstorage.topologySpreadConstraints</td>
@@ -2589,112 +2391,34 @@ cluster
 			<td></td>
 		</tr>
 		<tr>
-			<td>vmstorage.vmbackupmanager.probe.liveness.failureThreshold</td>
-			<td>int</td>
-			<td><pre lang="">
-10
+			<td>vmstorage.vmbackupmanager.probe.liveness</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+failureThreshold: 10
+initialDelaySeconds: 30
+periodSeconds: 30
+tcpSocket:
+    port: manager-http
+timeoutSeconds: 5
 </pre>
 </td>
-			<td></td>
+			<td>vmbackupmanager liveness probe</td>
 		</tr>
 		<tr>
-			<td>vmstorage.vmbackupmanager.probe.liveness.initialDelaySeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-30
+			<td>vmstorage.vmbackupmanager.probe.readiness</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+failureThreshold: 3
+httpGet:
+    path: '{{ include "vm.probe.http.path" . }}'
+    port: manager-http
+    scheme: '{{ include "vm.probe.http.scheme" . }}'
+initialDelaySeconds: 5
+periodSeconds: 15
+timeoutSeconds: 5
 </pre>
 </td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vmstorage.vmbackupmanager.probe.liveness.periodSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-30
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vmstorage.vmbackupmanager.probe.liveness.tcpSocket.port</td>
-			<td>string</td>
-			<td><pre lang="">
-manager-http
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vmstorage.vmbackupmanager.probe.liveness.timeoutSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-5
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vmstorage.vmbackupmanager.probe.readiness.failureThreshold</td>
-			<td>int</td>
-			<td><pre lang="">
-3
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vmstorage.vmbackupmanager.probe.readiness.httpGet.path</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ include "vm.probe.http.path" . }}'
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vmstorage.vmbackupmanager.probe.readiness.httpGet.port</td>
-			<td>string</td>
-			<td><pre lang="">
-manager-http
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vmstorage.vmbackupmanager.probe.readiness.httpGet.scheme</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ include "vm.probe.http.scheme" . }}'
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vmstorage.vmbackupmanager.probe.readiness.initialDelaySeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-5
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vmstorage.vmbackupmanager.probe.readiness.periodSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-15
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>vmstorage.vmbackupmanager.probe.readiness.timeoutSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-5
-</pre>
-</td>
-			<td></td>
+			<td>vmbackupmanager readiness probe</td>
 		</tr>
 		<tr>
 			<td>vmstorage.vmbackupmanager.probe.startup</td>
@@ -2703,7 +2427,7 @@ manager-http
 {}
 </pre>
 </td>
-			<td></td>
+			<td>vmbackupmanager startup probe</td>
 		</tr>
 		<tr>
 			<td>vmstorage.vmbackupmanager.resources</td>
@@ -2774,3 +2498,4 @@ keepLastWeekly: 2
 		</tr>
 	</tbody>
 </table>
+

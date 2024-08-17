@@ -200,6 +200,15 @@ devnull
 			<td></td>
 		</tr>
 		<tr>
+			<td>alertmanager.emptyDir</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
 			<td>alertmanager.enabled</td>
 			<td>bool</td>
 			<td><pre lang="">
@@ -263,31 +272,15 @@ false
 			<td></td>
 		</tr>
 		<tr>
-			<td>alertmanager.image.registry</td>
-			<td>string</td>
-			<td><pre lang="">
-""
+			<td>alertmanager.image</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+registry: ""
+repository: prom/alertmanager
+tag: v0.25.0
 </pre>
 </td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>alertmanager.image.repository</td>
-			<td>string</td>
-			<td><pre lang="">
-prom/alertmanager
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>alertmanager.image.tag</td>
-			<td>string</td>
-			<td><pre lang="">
-v0.25.0
-</pre>
-</td>
-			<td></td>
+			<td>alertmanager image configuration</td>
 		</tr>
 		<tr>
 			<td>alertmanager.imagePullSecrets</td>
@@ -377,7 +370,7 @@ Prefix
 - ReadWriteOnce
 </pre>
 </td>
-			<td>Array of access modes. Must match those of existing PV or dynamic provisioner. Ref: [http://kubernetes.io/docs/user-guide/persistent-volumes/](http://kubernetes.io/docs/user-guide/persistent-volumes/)</td>
+			<td>Array of access modes. Must match those of existing PV or dynamic provisioner. Details are <a href="http://kubernetes.io/docs/user-guide/persistent-volumes/">here</a></td>
 		</tr>
 		<tr>
 			<td>alertmanager.persistentVolume.annotations</td>
@@ -479,58 +472,37 @@ false
 			<td></td>
 		</tr>
 		<tr>
-			<td>alertmanager.probe.liveness.httpGet.path</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ ternary "" .baseURLPrefix (empty .baseURLPrefix) }}/-/healthy'
+			<td>alertmanager.probe.liveness</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+httpGet:
+    path: '{{ ternary "" .baseURLPrefix (empty .baseURLPrefix) }}/-/healthy'
+    port: web
 </pre>
 </td>
-			<td></td>
+			<td>liveness probe</td>
 		</tr>
 		<tr>
-			<td>alertmanager.probe.liveness.httpGet.port</td>
-			<td>string</td>
-			<td><pre lang="">
-web
+			<td>alertmanager.probe.readiness</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+httpGet:
+    path: '{{ ternary "" .baseURLPrefix (empty .baseURLPrefix) }}/-/ready'
+    port: web
 </pre>
 </td>
-			<td></td>
+			<td>readiness probe</td>
 		</tr>
 		<tr>
-			<td>alertmanager.probe.readiness.httpGet.path</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ ternary "" .baseURLPrefix (empty .baseURLPrefix) }}/-/ready'
+			<td>alertmanager.probe.startup</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+httpGet:
+    path: '{{ ternary "" .baseURLPrefix (empty .baseURLPrefix) }}/-/ready'
+    port: web
 </pre>
 </td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>alertmanager.probe.readiness.httpGet.port</td>
-			<td>string</td>
-			<td><pre lang="">
-web
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>alertmanager.probe.startup.httpGet.path</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ ternary "" .baseURLPrefix (empty .baseURLPrefix) }}/-/ready'
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>alertmanager.probe.startup.httpGet.port</td>
-			<td>string</td>
-			<td><pre lang="">
-web
-</pre>
-</td>
-			<td></td>
+			<td>startup probe</td>
 		</tr>
 		<tr>
 			<td>alertmanager.resources</td>
@@ -618,6 +590,24 @@ ClusterIP
 			<td>string</td>
 			<td><pre lang="">
 auto
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.image.registry</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.imagePullSecrets</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
 </pre>
 </td>
 			<td></td>
@@ -880,49 +870,17 @@ json
 			<td></td>
 		</tr>
 		<tr>
-			<td>server.image.pullPolicy</td>
-			<td>string</td>
-			<td><pre lang="">
-IfNotPresent
+			<td>server.image</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+pullPolicy: IfNotPresent
+registry: ""
+repository: victoriametrics/vmalert
+tag: ""
+variant: ""
 </pre>
 </td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>server.image.registry</td>
-			<td>string</td>
-			<td><pre lang="">
-""
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>server.image.repository</td>
-			<td>string</td>
-			<td><pre lang="">
-victoriametrics/vmalert
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>server.image.tag</td>
-			<td>string</td>
-			<td><pre lang="">
-""
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>server.image.variant</td>
-			<td>string</td>
-			<td><pre lang="">
-""
-</pre>
-</td>
-			<td></td>
+			<td>vmalert image configuration</td>
 		</tr>
 		<tr>
 			<td>server.imagePullSecrets</td>
@@ -1140,112 +1098,34 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>server.probe.liveness.failureThreshold</td>
-			<td>int</td>
-			<td><pre lang="">
-3
+			<td>server.probe.liveness</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+failureThreshold: 3
+initialDelaySeconds: 5
+periodSeconds: 15
+tcpSocket:
+    port: '{{ include "vm.probe.port" . }}'
+timeoutSeconds: 5
 </pre>
 </td>
-			<td></td>
+			<td>liveness probe</td>
 		</tr>
 		<tr>
-			<td>server.probe.liveness.initialDelaySeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-5
+			<td>server.probe.readiness</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+failureThreshold: 3
+httpGet:
+    path: '{{ include "vm.probe.http.path" . }}'
+    port: '{{ include "vm.probe.port" . }}'
+    scheme: '{{ include "vm.probe.http.scheme" . }}'
+initialDelaySeconds: 5
+periodSeconds: 15
+timeoutSeconds: 5
 </pre>
 </td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>server.probe.liveness.periodSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-15
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>server.probe.liveness.tcpSocket.port</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ include "vm.probe.port" . }}'
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>server.probe.liveness.timeoutSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-5
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>server.probe.readiness.failureThreshold</td>
-			<td>int</td>
-			<td><pre lang="">
-3
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>server.probe.readiness.httpGet.path</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ include "vm.probe.http.path" . }}'
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>server.probe.readiness.httpGet.port</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ include "vm.probe.port" . }}'
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>server.probe.readiness.httpGet.scheme</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ include "vm.probe.http.scheme" . }}'
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>server.probe.readiness.initialDelaySeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-5
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>server.probe.readiness.periodSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-15
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>server.probe.readiness.timeoutSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-5
-</pre>
-</td>
-			<td></td>
+			<td>readiness probe</td>
 		</tr>
 		<tr>
 			<td>server.probe.startup</td>
@@ -1254,7 +1134,7 @@ true
 {}
 </pre>
 </td>
-			<td></td>
+			<td>startup probe</td>
 		</tr>
 		<tr>
 			<td>server.remote.read.basicAuth</td>
@@ -1585,3 +1465,4 @@ false
 		</tr>
 	</tbody>
 </table>
+

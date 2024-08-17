@@ -43,7 +43,7 @@ serviceAccount:
   # -- The name of the service account to use. If not set and create is true, a name is generated using the fullname template
   name:
 
-# -- See `kubectl explain poddisruptionbudget.spec` for more. Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
+# -- See <code>kubectl explain poddisruptionbudget.spec</code> for more. Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
 podDisruptionBudget:
   enabled: false
   # minAvailable: 1
@@ -159,7 +159,7 @@ ingressInternal:
   # -- pathType is only for k8s >= 1.1=
   pathType: Prefix
 
-# -- We usually recommend not to specify default resources and to leave this as a conscious choice for the user. This also increases chances charts run on environments with little resources, such as Minikube. If you do want to specify resources, uncomment the following lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+# -- We usually recommend not to specify default resources and to leave this as a conscious choice for the user. This also increases chances charts run on environments with little resources, such as Minikube. If you do want to specify resources, uncomment the following lines, adjust them as necessary, and remove the curly braces after <code>resources:</code>.
 resources: {}
   # limits:
   #   cpu: 100m
@@ -212,7 +212,7 @@ serviceMonitor:
 #      insecureSkipVerify: true
 
 # -- Use existing secret if specified otherwise .config values will be used. Ref: https://victoriametrics.github.io/vmauth.html.
-# Configuration in the given secret must be stored under `auth.yml` key.
+# Configuration in the given secret must be stored under <code>auth.yml</code> key.
 secretName: ""
 
 # -- Config file content.
@@ -250,17 +250,20 @@ config:
 extraObjects: []
 
 probe:
+  # -- readiness probe
   readiness:
     tcpSocket:
       port: '{{ include "vm.probe.port" . }}'
     initialDelaySeconds: 5
     periodSeconds: 15
+  # -- liveness probe
   liveness:
     tcpSocket:
       port: '{{ include "vm.probe.port" . }}'
     initialDelaySeconds: 5
     periodSeconds: 15
     timeoutSeconds: 5
+  # -- startup probe
   startup: {}
 
 # -- Enterprise license key configuration for VictoriaMetrics enterprise.

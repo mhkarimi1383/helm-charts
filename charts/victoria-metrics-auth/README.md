@@ -256,6 +256,24 @@ auto
 			<td></td>
 		</tr>
 		<tr>
+			<td>global.image.registry</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.imagePullSecrets</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
 			<td>image.pullPolicy</td>
 			<td>string</td>
 			<td><pre lang="">
@@ -501,7 +519,7 @@ enabled: false
 labels: {}
 </pre>
 </td>
-			<td>See `kubectl explain poddisruptionbudget.spec` for more. Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/</td>
+			<td>See <code>kubectl explain poddisruptionbudget.spec</code> for more. Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/</td>
 		</tr>
 		<tr>
 			<td>podSecurityContext.enabled</td>
@@ -513,67 +531,29 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>probe.liveness.initialDelaySeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-5
+			<td>probe.liveness</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+initialDelaySeconds: 5
+periodSeconds: 15
+tcpSocket:
+    port: '{{ include "vm.probe.port" . }}'
+timeoutSeconds: 5
 </pre>
 </td>
-			<td></td>
+			<td>liveness probe</td>
 		</tr>
 		<tr>
-			<td>probe.liveness.periodSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-15
+			<td>probe.readiness</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+initialDelaySeconds: 5
+periodSeconds: 15
+tcpSocket:
+    port: '{{ include "vm.probe.port" . }}'
 </pre>
 </td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>probe.liveness.tcpSocket.port</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ include "vm.probe.port" . }}'
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>probe.liveness.timeoutSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-5
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>probe.readiness.initialDelaySeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-5
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>probe.readiness.periodSeconds</td>
-			<td>int</td>
-			<td><pre lang="">
-15
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>probe.readiness.tcpSocket.port</td>
-			<td>string</td>
-			<td><pre lang="">
-'{{ include "vm.probe.port" . }}'
-</pre>
-</td>
-			<td></td>
+			<td>readiness probe</td>
 		</tr>
 		<tr>
 			<td>probe.startup</td>
@@ -582,7 +562,7 @@ true
 {}
 </pre>
 </td>
-			<td></td>
+			<td>startup probe</td>
 		</tr>
 		<tr>
 			<td>rbac.annotations</td>
@@ -618,7 +598,7 @@ true
 {}
 </pre>
 </td>
-			<td>We usually recommend not to specify default resources and to leave this as a conscious choice for the user. This also increases chances charts run on environments with little resources, such as Minikube. If you do want to specify resources, uncomment the following lines, adjust them as necessary, and remove the curly braces after 'resources:'.</td>
+			<td>We usually recommend not to specify default resources and to leave this as a conscious choice for the user. This also increases chances charts run on environments with little resources, such as Minikube. If you do want to specify resources, uncomment the following lines, adjust them as necessary, and remove the curly braces after <code>resources:</code>.</td>
 		</tr>
 		<tr>
 			<td>secretName</td>
@@ -627,7 +607,7 @@ true
 ""
 </pre>
 </td>
-			<td>Use existing secret if specified otherwise .config values will be used. Ref: https://victoriametrics.github.io/vmauth.html. Configuration in the given secret must be stored under `auth.yml` key.</td>
+			<td>Use existing secret if specified otherwise .config values will be used. Ref: https://victoriametrics.github.io/vmauth.html. Configuration in the given secret must be stored under <code>auth.yml</code> key.</td>
 		</tr>
 		<tr>
 			<td>securityContext.enabled</td>
@@ -811,3 +791,4 @@ false
 		</tr>
 	</tbody>
 </table>
+

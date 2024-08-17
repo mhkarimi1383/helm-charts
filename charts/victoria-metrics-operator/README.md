@@ -137,69 +137,616 @@ The following tables lists the configurable parameters of the chart and their de
 
 Change the values according to the need of the environment in ``victoria-metrics-operator/values.yaml`` file.
 
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| admissionWebhooks | object | `{"caBundle":"","certManager":{"enabled":false,"issuer":{}},"enabled":false,"enabledCRDValidation":{"vmagent":true,"vmalert":true,"vmalertmanager":true,"vmalertmanagerConfig":true,"vmauth":true,"vmcluster":true,"vmrule":true,"vmsingle":true,"vmuser":true},"policy":"Fail"}` | Configures resource validation |
-| admissionWebhooks.caBundle | string | `""` | with keys: tls.key, tls.crt, ca.crt |
-| admissionWebhooks.certManager.enabled | bool | `false` | Enables cert creation and injection by cert-manager. |
-| admissionWebhooks.certManager.issuer | object | `{}` | If needed, provide own issuer. Operator will create self-signed if empty. |
-| admissionWebhooks.enabled | bool | `false` | Enables validation webhook. |
-| admissionWebhooks.policy | string | `"Fail"` | What to do in case, when operator not available to validate request. |
-| affinity | object | `{}` | Pod affinity |
-| annotations | object | `{}` | Annotations to be added to the all resources |
-| cleanupCRD | bool | `false` | Tells helm to clean up all the vm resources under this release's namespace when uninstalling |
-| cleanupImage.pullPolicy | string | `"IfNotPresent"` |  |
-| cleanupImage.repository | string | `"bitnami/kubectl"` |  |
-| createCRD | bool | `true` | with this option, if you remove this chart, all crd resources will be deleted with it. |
-| env | list | `[]` | extra settings for the operator deployment. full list Ref: [https://github.com/VictoriaMetrics/operator/blob/master/vars.MD](https://github.com/VictoriaMetrics/operator/blob/master/vars.MD) |
-| envFrom | list | `[]` |  |
-| extraArgs | object | `{}` | operator container additional commandline arguments |
-| extraContainers | list | `[]` |  |
-| extraHostPathMounts | list | `[]` | Additional hostPath mounts |
-| extraLabels | object | `{}` | Labels to be added to the all resources |
-| extraObjects | list | `[]` | Add extra specs dynamically to this chart |
-| extraVolumeMounts | list | `[]` | Extra Volume Mounts for the container |
-| extraVolumes | list | `[]` | Extra Volumes for the pod |
-| fullnameOverride | string | `""` | Overrides the full name of server component |
-| image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
-| image.registry | string | `""` | Image registry |
-| image.repository | string | `"victoriametrics/operator"` | Image repository |
-| image.tag | string | `""` | Image tag override Chart.AppVersion |
-| image.variant | string | `""` |  |
-| imagePullSecrets | list | `[]` | Secret to pull images |
-| logLevel | string | `"info"` | possible values: info and error. |
-| nameOverride | string | `""` | VM operatror deployment name override |
-| nodeSelector | object | `{}` | Pod's node selector. Ref: [https://kubernetes.io/docs/user-guide/node-selection/](https://kubernetes.io/docs/user-guide/node-selection/ |
-| operator.disable_prometheus_converter | bool | `false` | By default, operator converts prometheus-operator objects. |
-| operator.enable_converter_ownership | bool | `false` | Enables ownership reference for converted prometheus-operator objects, it will remove corresponding victoria-metrics objects in case of deletion prometheus one. |
-| operator.prometheus_converter_add_argocd_ignore_annotations | bool | `false` | Compare-options and sync-options for prometheus objects converted by operator for properly use with ArgoCD |
-| operator.useCustomConfigReloader | bool | `false` | Enables custom config-reloader, bundled with operator. It should reduce  vmagent and vmauth config sync-time and make it predictable. |
-| podDisruptionBudget.enabled | bool | `false` |  |
-| podDisruptionBudget.labels | object | `{}` |  |
-| podLabels | object | `{}` |  |
-| podSecurityContext | object | `{}` |  |
-| probe.liveness.failureThreshold | int | `3` |  |
-| probe.liveness.initialDelaySeconds | int | `5` |  |
-| probe.liveness.periodSeconds | int | `15` |  |
-| probe.liveness.tcpSocket.port | string | `"probe"` |  |
-| probe.liveness.timeoutSeconds | int | `5` |  |
-| probe.readiness.failureThreshold | int | `3` |  |
-| probe.readiness.httpGet.path | string | `"{{ include \"vm.probe.http.path\" . }}"` |  |
-| probe.readiness.httpGet.port | string | `"probe"` |  |
-| probe.readiness.httpGet.scheme | string | `"{{ include \"vm.probe.http.scheme\" . }}"` |  |
-| probe.readiness.initialDelaySeconds | int | `5` |  |
-| probe.readiness.periodSeconds | int | `15` |  |
-| probe.readiness.timeoutSeconds | int | `5` |  |
-| probe.startup | object | `{}` |  |
-| rbac.aggregatedClusterRoles | object | `{"enabled":true,"labels":{"admin":{"rbac.authorization.k8s.io/aggregate-to-admin":"true"},"view":{"rbac.authorization.k8s.io/aggregate-to-view":"true"}}}` | create aggregated clusterRoles for CRD readonly and admin permissions |
-| rbac.aggregatedClusterRoles.labels | object | `{"admin":{"rbac.authorization.k8s.io/aggregate-to-admin":"true"},"view":{"rbac.authorization.k8s.io/aggregate-to-view":"true"}}` | labels attached to according clusterRole |
-| rbac.create | bool | `true` | Specifies whether the RBAC resources should be created |
-| replicaCount | int | `1` |  |
-| resources | object | `{}` | Resource object |
-| securityContext | object | `{}` |  |
-| serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
-| serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
-| serviceMonitor | object | `{"annotations":{},"enabled":false,"extraLabels":{},"relabelings":[]}` | configures monitoring with serviceScrape. VMServiceScrape must be pre-installed |
-| tolerations | list | `[]` | Array of tolerations object. Ref: [https://kubernetes.io/docs/concepts/configuration/assign-pod-node/](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) |
-| topologySpreadConstraints | list | `[]` | Pod Topology Spread Constraints. Ref: [https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/) |
-| watchNamespace | string | `""` |  |
+<table>
+	<thead>
+		<th>Key</th>
+		<th>Type</th>
+		<th>Default</th>
+		<th>Description</th>
+	</thead>
+	<tbody>
+		<tr>
+			<td>admissionWebhooks</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+caBundle: ""
+certManager:
+    enabled: false
+    issuer: {}
+enabled: false
+enabledCRDValidation:
+    vmagent: true
+    vmalert: true
+    vmalertmanager: true
+    vmalertmanagerConfig: true
+    vmauth: true
+    vmcluster: true
+    vmrule: true
+    vmsingle: true
+    vmuser: true
+policy: Fail
+</pre>
+</td>
+			<td>Configures resource validation</td>
+		</tr>
+		<tr>
+			<td>admissionWebhooks.caBundle</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td>with keys: tls.key, tls.crt, ca.crt</td>
+		</tr>
+		<tr>
+			<td>admissionWebhooks.certManager.enabled</td>
+			<td>bool</td>
+			<td><pre lang="">
+false
+</pre>
+</td>
+			<td>Enables cert creation and injection by cert-manager.</td>
+		</tr>
+		<tr>
+			<td>admissionWebhooks.certManager.issuer</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td>If needed, provide own issuer. Operator will create self-signed if empty.</td>
+		</tr>
+		<tr>
+			<td>admissionWebhooks.enabled</td>
+			<td>bool</td>
+			<td><pre lang="">
+false
+</pre>
+</td>
+			<td>Enables validation webhook.</td>
+		</tr>
+		<tr>
+			<td>admissionWebhooks.policy</td>
+			<td>string</td>
+			<td><pre lang="">
+Fail
+</pre>
+</td>
+			<td>What to do in case, when operator not available to validate request.</td>
+		</tr>
+		<tr>
+			<td>affinity</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td>Pod affinity</td>
+		</tr>
+		<tr>
+			<td>annotations</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td>Annotations to be added to the all resources</td>
+		</tr>
+		<tr>
+			<td>cleanupCRD</td>
+			<td>bool</td>
+			<td><pre lang="">
+false
+</pre>
+</td>
+			<td>Tells helm to clean up all the vm resources under this release's namespace when uninstalling</td>
+		</tr>
+		<tr>
+			<td>cleanupImage.pullPolicy</td>
+			<td>string</td>
+			<td><pre lang="">
+IfNotPresent
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>cleanupImage.repository</td>
+			<td>string</td>
+			<td><pre lang="">
+bitnami/kubectl
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>createCRD</td>
+			<td>bool</td>
+			<td><pre lang="">
+true
+</pre>
+</td>
+			<td>with this option, if you remove this chart, all crd resources will be deleted with it.</td>
+		</tr>
+		<tr>
+			<td>env</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td>extra settings for the operator deployment. full list Ref: [https://github.com/VictoriaMetrics/operator/blob/master/vars.MD](https://github.com/VictoriaMetrics/operator/blob/master/vars.MD)</td>
+		</tr>
+		<tr>
+			<td>envFrom</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>extraArgs</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td>operator container additional commandline arguments</td>
+		</tr>
+		<tr>
+			<td>extraContainers</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>extraHostPathMounts</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td>Additional hostPath mounts</td>
+		</tr>
+		<tr>
+			<td>extraLabels</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td>Labels to be added to the all resources</td>
+		</tr>
+		<tr>
+			<td>extraObjects</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td>Add extra specs dynamically to this chart</td>
+		</tr>
+		<tr>
+			<td>extraVolumeMounts</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td>Extra Volume Mounts for the container</td>
+		</tr>
+		<tr>
+			<td>extraVolumes</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td>Extra Volumes for the pod</td>
+		</tr>
+		<tr>
+			<td>fullnameOverride</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td>Overrides the full name of server component</td>
+		</tr>
+		<tr>
+			<td>image.pullPolicy</td>
+			<td>string</td>
+			<td><pre lang="">
+IfNotPresent
+</pre>
+</td>
+			<td>Image pull policy</td>
+		</tr>
+		<tr>
+			<td>image.registry</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td>Image registry</td>
+		</tr>
+		<tr>
+			<td>image.repository</td>
+			<td>string</td>
+			<td><pre lang="">
+victoriametrics/operator
+</pre>
+</td>
+			<td>Image repository</td>
+		</tr>
+		<tr>
+			<td>image.tag</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td>Image tag override Chart.AppVersion</td>
+		</tr>
+		<tr>
+			<td>image.variant</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>imagePullSecrets</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td>Secret to pull images</td>
+		</tr>
+		<tr>
+			<td>logLevel</td>
+			<td>string</td>
+			<td><pre lang="">
+info
+</pre>
+</td>
+			<td>possible values: info and error.</td>
+		</tr>
+		<tr>
+			<td>nameOverride</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td>VM operatror deployment name override</td>
+		</tr>
+		<tr>
+			<td>nodeSelector</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td>Pod's node selector. Ref: [https://kubernetes.io/docs/user-guide/node-selection/](https://kubernetes.io/docs/user-guide/node-selection/</td>
+		</tr>
+		<tr>
+			<td>operator.disable_prometheus_converter</td>
+			<td>bool</td>
+			<td><pre lang="">
+false
+</pre>
+</td>
+			<td>By default, operator converts prometheus-operator objects.</td>
+		</tr>
+		<tr>
+			<td>operator.enable_converter_ownership</td>
+			<td>bool</td>
+			<td><pre lang="">
+false
+</pre>
+</td>
+			<td>Enables ownership reference for converted prometheus-operator objects, it will remove corresponding victoria-metrics objects in case of deletion prometheus one.</td>
+		</tr>
+		<tr>
+			<td>operator.prometheus_converter_add_argocd_ignore_annotations</td>
+			<td>bool</td>
+			<td><pre lang="">
+false
+</pre>
+</td>
+			<td>Compare-options and sync-options for prometheus objects converted by operator for properly use with ArgoCD</td>
+		</tr>
+		<tr>
+			<td>operator.useCustomConfigReloader</td>
+			<td>bool</td>
+			<td><pre lang="">
+false
+</pre>
+</td>
+			<td>Enables custom config-reloader, bundled with operator. It should reduce  vmagent and vmauth config sync-time and make it predictable.</td>
+		</tr>
+		<tr>
+			<td>podDisruptionBudget.enabled</td>
+			<td>bool</td>
+			<td><pre lang="">
+false
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>podDisruptionBudget.labels</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>podLabels</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>podSecurityContext</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>probe.liveness.failureThreshold</td>
+			<td>int</td>
+			<td><pre lang="">
+3
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>probe.liveness.initialDelaySeconds</td>
+			<td>int</td>
+			<td><pre lang="">
+5
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>probe.liveness.periodSeconds</td>
+			<td>int</td>
+			<td><pre lang="">
+15
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>probe.liveness.tcpSocket.port</td>
+			<td>string</td>
+			<td><pre lang="">
+probe
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>probe.liveness.timeoutSeconds</td>
+			<td>int</td>
+			<td><pre lang="">
+5
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>probe.readiness.failureThreshold</td>
+			<td>int</td>
+			<td><pre lang="">
+3
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>probe.readiness.httpGet.path</td>
+			<td>string</td>
+			<td><pre lang="">
+'{{ include "vm.probe.http.path" . }}'
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>probe.readiness.httpGet.port</td>
+			<td>string</td>
+			<td><pre lang="">
+probe
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>probe.readiness.httpGet.scheme</td>
+			<td>string</td>
+			<td><pre lang="">
+'{{ include "vm.probe.http.scheme" . }}'
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>probe.readiness.initialDelaySeconds</td>
+			<td>int</td>
+			<td><pre lang="">
+5
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>probe.readiness.periodSeconds</td>
+			<td>int</td>
+			<td><pre lang="">
+15
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>probe.readiness.timeoutSeconds</td>
+			<td>int</td>
+			<td><pre lang="">
+5
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>probe.startup</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>rbac.aggregatedClusterRoles</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+enabled: true
+labels:
+    admin:
+        rbac.authorization.k8s.io/aggregate-to-admin: "true"
+    view:
+        rbac.authorization.k8s.io/aggregate-to-view: "true"
+</pre>
+</td>
+			<td>create aggregated clusterRoles for CRD readonly and admin permissions</td>
+		</tr>
+		<tr>
+			<td>rbac.aggregatedClusterRoles.labels</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+admin:
+    rbac.authorization.k8s.io/aggregate-to-admin: "true"
+view:
+    rbac.authorization.k8s.io/aggregate-to-view: "true"
+</pre>
+</td>
+			<td>labels attached to according clusterRole</td>
+		</tr>
+		<tr>
+			<td>rbac.create</td>
+			<td>bool</td>
+			<td><pre lang="">
+true
+</pre>
+</td>
+			<td>Specifies whether the RBAC resources should be created</td>
+		</tr>
+		<tr>
+			<td>replicaCount</td>
+			<td>int</td>
+			<td><pre lang="">
+1
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>resources</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td>Resource object</td>
+		</tr>
+		<tr>
+			<td>securityContext</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>serviceAccount.create</td>
+			<td>bool</td>
+			<td><pre lang="">
+true
+</pre>
+</td>
+			<td>Specifies whether a service account should be created</td>
+		</tr>
+		<tr>
+			<td>serviceAccount.name</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td>The name of the service account to use. If not set and create is true, a name is generated using the fullname template</td>
+		</tr>
+		<tr>
+			<td>serviceMonitor</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+annotations: {}
+enabled: false
+extraLabels: {}
+relabelings: []
+</pre>
+</td>
+			<td>configures monitoring with serviceScrape. VMServiceScrape must be pre-installed</td>
+		</tr>
+		<tr>
+			<td>tolerations</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td>Array of tolerations object. Ref: [https://kubernetes.io/docs/concepts/configuration/assign-pod-node/](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/)</td>
+		</tr>
+		<tr>
+			<td>topologySpreadConstraints</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td>Pod Topology Spread Constraints. Ref: [https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/)</td>
+		</tr>
+		<tr>
+			<td>watchNamespace</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+	</tbody>
+</table>
+

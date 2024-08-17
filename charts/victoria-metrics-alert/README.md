@@ -101,167 +101,1488 @@ The following tables lists the configurable parameters of the chart and their de
 
 Change the values according to the need of the environment in ``victoria-metrics-alert/values.yaml`` file.
 
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| alertmanager.baseURL | string | `""` |  |
-| alertmanager.baseURLPrefix | string | `""` |  |
-| alertmanager.config.global.resolve_timeout | string | `"5m"` |  |
-| alertmanager.config.receivers[0].name | string | `"devnull"` |  |
-| alertmanager.config.route.group_by[0] | string | `"alertname"` |  |
-| alertmanager.config.route.group_interval | string | `"10s"` |  |
-| alertmanager.config.route.group_wait | string | `"30s"` |  |
-| alertmanager.config.route.receiver | string | `"devnull"` |  |
-| alertmanager.config.route.repeat_interval | string | `"24h"` |  |
-| alertmanager.configMap | string | `""` |  |
-| alertmanager.enabled | bool | `false` |  |
-| alertmanager.envFrom | list | `[]` |  |
-| alertmanager.extraArgs | object | `{}` |  |
-| alertmanager.extraContainers | list | `[]` |  |
-| alertmanager.extraHostPathMounts | list | `[]` |  |
-| alertmanager.extraVolumeMounts | list | `[]` |  |
-| alertmanager.extraVolumes | list | `[]` |  |
-| alertmanager.image.registry | string | `""` |  |
-| alertmanager.image.repository | string | `"prom/alertmanager"` |  |
-| alertmanager.image.tag | string | `"v0.25.0"` |  |
-| alertmanager.imagePullSecrets | list | `[]` |  |
-| alertmanager.ingress.annotations | object | `{}` |  |
-| alertmanager.ingress.enabled | bool | `false` |  |
-| alertmanager.ingress.extraLabels | object | `{}` |  |
-| alertmanager.ingress.hosts | list | `[]` |  |
-| alertmanager.ingress.pathType | string | `"Prefix"` | pathType is only for k8s >= 1.1= |
-| alertmanager.ingress.tls | list | `[]` |  |
-| alertmanager.listenAddress | string | `"0.0.0.0:9093"` |  |
-| alertmanager.nodeSelector | object | `{}` |  |
-| alertmanager.persistentVolume.accessModes | list | `["ReadWriteOnce"]` | Array of access modes. Must match those of existing PV or dynamic provisioner. Ref: [http://kubernetes.io/docs/user-guide/persistent-volumes/](http://kubernetes.io/docs/user-guide/persistent-volumes/) |
-| alertmanager.persistentVolume.annotations | object | `{}` | Persistant volume annotations |
-| alertmanager.persistentVolume.enabled | bool | `false` | Create/use Persistent Volume Claim for alertmanager component. Empty dir if false |
-| alertmanager.persistentVolume.existingClaim | string | `""` | Existing Claim name. If defined, PVC must be created manually before volume will be bound |
-| alertmanager.persistentVolume.mountPath | string | `"/data"` | Mount path. Alertmanager data Persistent Volume mount root path. |
-| alertmanager.persistentVolume.size | string | `"50Mi"` | Size of the volume. Better to set the same as resource limit memory property. |
-| alertmanager.persistentVolume.storageClass | string | `""` | StorageClass to use for persistent volume. Requires alertmanager.persistentVolume.enabled: true. If defined, PVC created automatically |
-| alertmanager.persistentVolume.subPath | string | `""` | Mount subpath |
-| alertmanager.podMetadata.annotations | object | `{}` |  |
-| alertmanager.podMetadata.labels | object | `{}` |  |
-| alertmanager.podSecurityContext.enabled | bool | `false` |  |
-| alertmanager.priorityClassName | string | `""` |  |
-| alertmanager.probe.liveness.httpGet.path | string | `"{{ ternary \"\" .baseURLPrefix (empty .baseURLPrefix) }}/-/healthy"` |  |
-| alertmanager.probe.liveness.httpGet.port | string | `"web"` |  |
-| alertmanager.probe.readiness.httpGet.path | string | `"{{ ternary \"\" .baseURLPrefix (empty .baseURLPrefix) }}/-/ready"` |  |
-| alertmanager.probe.readiness.httpGet.port | string | `"web"` |  |
-| alertmanager.probe.startup.httpGet.path | string | `"{{ ternary \"\" .baseURLPrefix (empty .baseURLPrefix) }}/-/ready"` |  |
-| alertmanager.probe.startup.httpGet.port | string | `"web"` |  |
-| alertmanager.resources | object | `{}` |  |
-| alertmanager.retention | string | `"120h"` |  |
-| alertmanager.securityContext.enabled | bool | `false` |  |
-| alertmanager.service.annotations | object | `{}` |  |
-| alertmanager.service.port | int | `9093` |  |
-| alertmanager.service.type | string | `"ClusterIP"` |  |
-| alertmanager.templates | object | `{}` |  |
-| alertmanager.tolerations | list | `[]` |  |
-| extraObjects | list | `[]` | Add extra specs dynamically to this chart |
-| global.compatibility.openshift.adaptSecurityContext | string | `"auto"` |  |
-| license | object | `{"key":"","secret":{"key":"","name":""}}` | Enterprise license key configuration for VictoriaMetrics enterprise. Required only for VictoriaMetrics enterprise. Documentation - https://docs.victoriametrics.com/enterprise.html, for more information, visit https://victoriametrics.com/products/enterprise/ . To request a trial license, go to https://victoriametrics.com/products/enterprise/trial/ Supported starting from VictoriaMetrics v1.94.0 |
-| license.key | string | `""` | License key |
-| license.secret | object | `{"key":"","name":""}` | Use existing secret with license key |
-| license.secret.key | string | `""` | Key in secret with license key |
-| license.secret.name | string | `""` | Existing secret name |
-| rbac.annotations | object | `{}` |  |
-| rbac.create | bool | `true` |  |
-| rbac.extraLabels | object | `{}` |  |
-| rbac.namespaced | bool | `false` |  |
-| server.affinity | object | `{}` |  |
-| server.annotations | object | `{}` |  |
-| server.config.alerts.groups | list | `[]` |  |
-| server.configMap | string | `""` |  |
-| server.datasource.basicAuth | object | `{"password":"","username":""}` | Basic auth for datasource |
-| server.datasource.bearer.token | string | `""` | Token with Bearer token. You can use one of token or tokenFile. You don't need to add "Bearer" prefix string |
-| server.datasource.bearer.tokenFile | string | `""` | Token Auth file with Bearer token. You can use one of token or tokenFile |
-| server.datasource.url | string | `""` |  |
-| server.enabled | bool | `true` |  |
-| server.env | list | `[]` | Additional environment variables (ex.: secret tokens, flags) https://docs.victoriametrics.com/#environment-variables |
-| server.envFrom | list | `[]` |  |
-| server.extraArgs."envflag.enable" | string | `"true"` |  |
-| server.extraArgs."envflag.prefix" | string | `"VM_"` |  |
-| server.extraArgs.loggerFormat | string | `"json"` |  |
-| server.extraContainers | list | `[]` | Additional containers to run in the same pod |
-| server.extraHostPathMounts | list | `[]` | Additional hostPath mounts |
-| server.extraVolumeMounts | list | `[]` | Extra Volume Mounts for the container |
-| server.extraVolumes | list | `[]` | Extra Volumes for the pod |
-| server.fullnameOverride | string | `""` |  |
-| server.image.pullPolicy | string | `"IfNotPresent"` |  |
-| server.image.registry | string | `""` |  |
-| server.image.repository | string | `"victoriametrics/vmalert"` |  |
-| server.image.tag | string | `""` |  |
-| server.image.variant | string | `""` |  |
-| server.imagePullSecrets | list | `[]` |  |
-| server.ingress.annotations | object | `{}` |  |
-| server.ingress.enabled | bool | `false` |  |
-| server.ingress.extraLabels | object | `{}` |  |
-| server.ingress.hosts | list | `[]` |  |
-| server.ingress.pathType | string | `"Prefix"` | pathType is only for k8s >= 1.1= |
-| server.ingress.tls | list | `[]` |  |
-| server.labels | object | `{}` |  |
-| server.minReadySeconds | int | `0` |  |
-| server.name | string | `"server"` |  |
-| server.nameOverride | string | `""` |  |
-| server.nodeSelector | object | `{}` |  |
-| server.notifier | object | `{"alertmanager":{"basicAuth":{"password":"","username":""},"bearer":{"token":"","tokenFile":""},"url":""}}` | Notifier to use for alerts. Multiple notifiers can be enabled by using `notifiers` section |
-| server.notifier.alertmanager.basicAuth | object | `{"password":"","username":""}` | Basic auth for alertmanager |
-| server.notifier.alertmanager.bearer.token | string | `""` | Token with Bearer token. You can use one of token or tokenFile. You don't need to add "Bearer" prefix string |
-| server.notifier.alertmanager.bearer.tokenFile | string | `""` | Token Auth file with Bearer token. You can use one of token or tokenFile |
-| server.notifiers | list | `[]` | Additional notifiers to use for alerts |
-| server.podAnnotations | object | `{}` |  |
-| server.podDisruptionBudget.enabled | bool | `false` |  |
-| server.podDisruptionBudget.labels | object | `{}` |  |
-| server.podLabels | object | `{}` |  |
-| server.podSecurityContext.enabled | bool | `true` |  |
-| server.priorityClassName | string | `""` |  |
-| server.probe.liveness.failureThreshold | int | `3` |  |
-| server.probe.liveness.initialDelaySeconds | int | `5` |  |
-| server.probe.liveness.periodSeconds | int | `15` |  |
-| server.probe.liveness.tcpSocket.port | string | `"{{ include \"vm.probe.port\" . }}"` |  |
-| server.probe.liveness.timeoutSeconds | int | `5` |  |
-| server.probe.readiness.failureThreshold | int | `3` |  |
-| server.probe.readiness.httpGet.path | string | `"{{ include \"vm.probe.http.path\" . }}"` |  |
-| server.probe.readiness.httpGet.port | string | `"{{ include \"vm.probe.port\" . }}"` |  |
-| server.probe.readiness.httpGet.scheme | string | `"{{ include \"vm.probe.http.scheme\" . }}"` |  |
-| server.probe.readiness.initialDelaySeconds | int | `5` |  |
-| server.probe.readiness.periodSeconds | int | `15` |  |
-| server.probe.readiness.timeoutSeconds | int | `5` |  |
-| server.probe.startup | object | `{}` |  |
-| server.remote.read.basicAuth | object | `{"password":"","username":""}` | Basic auth for remote read |
-| server.remote.read.bearer.token | string | `""` | Token with Bearer token. You can use one of token or tokenFile. You don't need to add "Bearer" prefix string |
-| server.remote.read.bearer.tokenFile | string | `""` | Token Auth file with Bearer token. You can use one of token or tokenFile |
-| server.remote.read.url | string | `""` |  |
-| server.remote.write.basicAuth | object | `{"password":"","username":""}` | Basic auth for remote write |
-| server.remote.write.bearer | object | `{"token":"","tokenFile":""}` | Auth based on Bearer token for remote write |
-| server.remote.write.bearer.token | string | `""` | Token with Bearer token. You can use one of token or tokenFile. You don't need to add "Bearer" prefix string |
-| server.remote.write.bearer.tokenFile | string | `""` | Token Auth file with Bearer token. You can use one of token or tokenFile |
-| server.remote.write.url | string | `""` |  |
-| server.replicaCount | int | `1` |  |
-| server.resources | object | `{}` |  |
-| server.securityContext.enabled | bool | `true` |  |
-| server.service.annotations | object | `{}` |  |
-| server.service.clusterIP | string | `""` |  |
-| server.service.externalIPs | list | `[]` |  |
-| server.service.labels | object | `{}` |  |
-| server.service.loadBalancerIP | string | `""` |  |
-| server.service.loadBalancerSourceRanges | list | `[]` |  |
-| server.service.servicePort | int | `8880` |  |
-| server.service.type | string | `"ClusterIP"` |  |
-| server.strategy.rollingUpdate.maxSurge | string | `"25%"` |  |
-| server.strategy.rollingUpdate.maxUnavailable | string | `"25%"` |  |
-| server.strategy.type | string | `"RollingUpdate"` |  |
-| server.tolerations | list | `[]` |  |
-| server.verticalPodAutoscaler | object | `{"enabled":false}` | Vertical Pod Autoscaler |
-| server.verticalPodAutoscaler.enabled | bool | `false` | Use VPA for vmalert |
-| serviceAccount.annotations | object | `{}` |  |
-| serviceAccount.automountToken | bool | `true` |  |
-| serviceAccount.create | bool | `true` |  |
-| serviceAccount.name | string | `nil` |  |
-| serviceMonitor.annotations | object | `{}` | Service Monitor annotations |
-| serviceMonitor.basicAuth | object | `{}` | Basic auth params for Service Monitor |
-| serviceMonitor.enabled | bool | `false` | Enable deployment of Service Monitor for server component. This is Prometheus operator object |
-| serviceMonitor.extraLabels | object | `{}` | Service Monitor labels |
-| serviceMonitor.metricRelabelings | list | `[]` | Service Monitor metricRelabelings |
-| serviceMonitor.relabelings | list | `[]` | Service Monitor relabelings |
+<table>
+	<thead>
+		<th>Key</th>
+		<th>Type</th>
+		<th>Default</th>
+		<th>Description</th>
+	</thead>
+	<tbody>
+		<tr>
+			<td>alertmanager.baseURL</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.baseURLPrefix</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.config.global.resolve_timeout</td>
+			<td>string</td>
+			<td><pre lang="">
+5m
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.config.receivers[0].name</td>
+			<td>string</td>
+			<td><pre lang="">
+devnull
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.config.route.group_by[0]</td>
+			<td>string</td>
+			<td><pre lang="">
+alertname
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.config.route.group_interval</td>
+			<td>string</td>
+			<td><pre lang="">
+10s
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.config.route.group_wait</td>
+			<td>string</td>
+			<td><pre lang="">
+30s
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.config.route.receiver</td>
+			<td>string</td>
+			<td><pre lang="">
+devnull
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.config.route.repeat_interval</td>
+			<td>string</td>
+			<td><pre lang="">
+24h
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.configMap</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.enabled</td>
+			<td>bool</td>
+			<td><pre lang="">
+false
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.envFrom</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.extraArgs</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.extraContainers</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.extraHostPathMounts</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.extraVolumeMounts</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.extraVolumes</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.image.registry</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.image.repository</td>
+			<td>string</td>
+			<td><pre lang="">
+prom/alertmanager
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.image.tag</td>
+			<td>string</td>
+			<td><pre lang="">
+v0.25.0
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.imagePullSecrets</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.ingress.annotations</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.ingress.enabled</td>
+			<td>bool</td>
+			<td><pre lang="">
+false
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.ingress.extraLabels</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.ingress.hosts</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.ingress.pathType</td>
+			<td>string</td>
+			<td><pre lang="">
+Prefix
+</pre>
+</td>
+			<td>pathType is only for k8s >= 1.1=</td>
+		</tr>
+		<tr>
+			<td>alertmanager.ingress.tls</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.listenAddress</td>
+			<td>string</td>
+			<td><pre lang="">
+0.0.0.0:9093
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.nodeSelector</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.persistentVolume.accessModes</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+- ReadWriteOnce
+</pre>
+</td>
+			<td>Array of access modes. Must match those of existing PV or dynamic provisioner. Ref: [http://kubernetes.io/docs/user-guide/persistent-volumes/](http://kubernetes.io/docs/user-guide/persistent-volumes/)</td>
+		</tr>
+		<tr>
+			<td>alertmanager.persistentVolume.annotations</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td>Persistant volume annotations</td>
+		</tr>
+		<tr>
+			<td>alertmanager.persistentVolume.enabled</td>
+			<td>bool</td>
+			<td><pre lang="">
+false
+</pre>
+</td>
+			<td>Create/use Persistent Volume Claim for alertmanager component. Empty dir if false</td>
+		</tr>
+		<tr>
+			<td>alertmanager.persistentVolume.existingClaim</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td>Existing Claim name. If defined, PVC must be created manually before volume will be bound</td>
+		</tr>
+		<tr>
+			<td>alertmanager.persistentVolume.mountPath</td>
+			<td>string</td>
+			<td><pre lang="">
+/data
+</pre>
+</td>
+			<td>Mount path. Alertmanager data Persistent Volume mount root path.</td>
+		</tr>
+		<tr>
+			<td>alertmanager.persistentVolume.size</td>
+			<td>string</td>
+			<td><pre lang="">
+50Mi
+</pre>
+</td>
+			<td>Size of the volume. Better to set the same as resource limit memory property.</td>
+		</tr>
+		<tr>
+			<td>alertmanager.persistentVolume.storageClass</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td>StorageClass to use for persistent volume. Requires alertmanager.persistentVolume.enabled: true. If defined, PVC created automatically</td>
+		</tr>
+		<tr>
+			<td>alertmanager.persistentVolume.subPath</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td>Mount subpath</td>
+		</tr>
+		<tr>
+			<td>alertmanager.podMetadata.annotations</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.podMetadata.labels</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.podSecurityContext.enabled</td>
+			<td>bool</td>
+			<td><pre lang="">
+false
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.priorityClassName</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.probe.liveness.httpGet.path</td>
+			<td>string</td>
+			<td><pre lang="">
+'{{ ternary "" .baseURLPrefix (empty .baseURLPrefix) }}/-/healthy'
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.probe.liveness.httpGet.port</td>
+			<td>string</td>
+			<td><pre lang="">
+web
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.probe.readiness.httpGet.path</td>
+			<td>string</td>
+			<td><pre lang="">
+'{{ ternary "" .baseURLPrefix (empty .baseURLPrefix) }}/-/ready'
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.probe.readiness.httpGet.port</td>
+			<td>string</td>
+			<td><pre lang="">
+web
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.probe.startup.httpGet.path</td>
+			<td>string</td>
+			<td><pre lang="">
+'{{ ternary "" .baseURLPrefix (empty .baseURLPrefix) }}/-/ready'
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.probe.startup.httpGet.port</td>
+			<td>string</td>
+			<td><pre lang="">
+web
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.resources</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.retention</td>
+			<td>string</td>
+			<td><pre lang="">
+120h
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.securityContext.enabled</td>
+			<td>bool</td>
+			<td><pre lang="">
+false
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.service.annotations</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.service.port</td>
+			<td>int</td>
+			<td><pre lang="">
+9093
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.service.type</td>
+			<td>string</td>
+			<td><pre lang="">
+ClusterIP
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.templates</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>alertmanager.tolerations</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>extraObjects</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td>Add extra specs dynamically to this chart</td>
+		</tr>
+		<tr>
+			<td>global.compatibility.openshift.adaptSecurityContext</td>
+			<td>string</td>
+			<td><pre lang="">
+auto
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>license</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+key: ""
+secret:
+    key: ""
+    name: ""
+</pre>
+</td>
+			<td>Enterprise license key configuration for VictoriaMetrics enterprise. Required only for VictoriaMetrics enterprise. Documentation - https://docs.victoriametrics.com/enterprise.html, for more information, visit https://victoriametrics.com/products/enterprise/ . To request a trial license, go to https://victoriametrics.com/products/enterprise/trial/ Supported starting from VictoriaMetrics v1.94.0</td>
+		</tr>
+		<tr>
+			<td>license.key</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td>License key</td>
+		</tr>
+		<tr>
+			<td>license.secret</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+key: ""
+name: ""
+</pre>
+</td>
+			<td>Use existing secret with license key</td>
+		</tr>
+		<tr>
+			<td>license.secret.key</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td>Key in secret with license key</td>
+		</tr>
+		<tr>
+			<td>license.secret.name</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td>Existing secret name</td>
+		</tr>
+		<tr>
+			<td>rbac.annotations</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>rbac.create</td>
+			<td>bool</td>
+			<td><pre lang="">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>rbac.extraLabels</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>rbac.namespaced</td>
+			<td>bool</td>
+			<td><pre lang="">
+false
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.affinity</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.annotations</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.config.alerts.groups</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.configMap</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.datasource.basicAuth</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+password: ""
+username: ""
+</pre>
+</td>
+			<td>Basic auth for datasource</td>
+		</tr>
+		<tr>
+			<td>server.datasource.bearer.token</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td>Token with Bearer token. You can use one of token or tokenFile. You don't need to add "Bearer" prefix string</td>
+		</tr>
+		<tr>
+			<td>server.datasource.bearer.tokenFile</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td>Token Auth file with Bearer token. You can use one of token or tokenFile</td>
+		</tr>
+		<tr>
+			<td>server.datasource.url</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.enabled</td>
+			<td>bool</td>
+			<td><pre lang="">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.env</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td>Additional environment variables (ex.: secret tokens, flags) https://docs.victoriametrics.com/#environment-variables</td>
+		</tr>
+		<tr>
+			<td>server.envFrom</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.extraArgs."envflag.enable"</td>
+			<td>string</td>
+			<td><pre lang="">
+"true"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.extraArgs."envflag.prefix"</td>
+			<td>string</td>
+			<td><pre lang="">
+VM_
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.extraArgs.loggerFormat</td>
+			<td>string</td>
+			<td><pre lang="">
+json
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.extraContainers</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td>Additional containers to run in the same pod</td>
+		</tr>
+		<tr>
+			<td>server.extraHostPathMounts</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td>Additional hostPath mounts</td>
+		</tr>
+		<tr>
+			<td>server.extraVolumeMounts</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td>Extra Volume Mounts for the container</td>
+		</tr>
+		<tr>
+			<td>server.extraVolumes</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td>Extra Volumes for the pod</td>
+		</tr>
+		<tr>
+			<td>server.fullnameOverride</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.image.pullPolicy</td>
+			<td>string</td>
+			<td><pre lang="">
+IfNotPresent
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.image.registry</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.image.repository</td>
+			<td>string</td>
+			<td><pre lang="">
+victoriametrics/vmalert
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.image.tag</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.image.variant</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.imagePullSecrets</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.ingress.annotations</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.ingress.enabled</td>
+			<td>bool</td>
+			<td><pre lang="">
+false
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.ingress.extraLabels</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.ingress.hosts</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.ingress.pathType</td>
+			<td>string</td>
+			<td><pre lang="">
+Prefix
+</pre>
+</td>
+			<td>pathType is only for k8s >= 1.1=</td>
+		</tr>
+		<tr>
+			<td>server.ingress.tls</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.labels</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.minReadySeconds</td>
+			<td>int</td>
+			<td><pre lang="">
+0
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.name</td>
+			<td>string</td>
+			<td><pre lang="">
+server
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.nameOverride</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.nodeSelector</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.notifier</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+alertmanager:
+    basicAuth:
+        password: ""
+        username: ""
+    bearer:
+        token: ""
+        tokenFile: ""
+    url: ""
+</pre>
+</td>
+			<td>Notifier to use for alerts. Multiple notifiers can be enabled by using `notifiers` section</td>
+		</tr>
+		<tr>
+			<td>server.notifier.alertmanager.basicAuth</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+password: ""
+username: ""
+</pre>
+</td>
+			<td>Basic auth for alertmanager</td>
+		</tr>
+		<tr>
+			<td>server.notifier.alertmanager.bearer.token</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td>Token with Bearer token. You can use one of token or tokenFile. You don't need to add "Bearer" prefix string</td>
+		</tr>
+		<tr>
+			<td>server.notifier.alertmanager.bearer.tokenFile</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td>Token Auth file with Bearer token. You can use one of token or tokenFile</td>
+		</tr>
+		<tr>
+			<td>server.notifiers</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td>Additional notifiers to use for alerts</td>
+		</tr>
+		<tr>
+			<td>server.podAnnotations</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.podDisruptionBudget.enabled</td>
+			<td>bool</td>
+			<td><pre lang="">
+false
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.podDisruptionBudget.labels</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.podLabels</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.podSecurityContext.enabled</td>
+			<td>bool</td>
+			<td><pre lang="">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.priorityClassName</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.probe.liveness.failureThreshold</td>
+			<td>int</td>
+			<td><pre lang="">
+3
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.probe.liveness.initialDelaySeconds</td>
+			<td>int</td>
+			<td><pre lang="">
+5
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.probe.liveness.periodSeconds</td>
+			<td>int</td>
+			<td><pre lang="">
+15
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.probe.liveness.tcpSocket.port</td>
+			<td>string</td>
+			<td><pre lang="">
+'{{ include "vm.probe.port" . }}'
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.probe.liveness.timeoutSeconds</td>
+			<td>int</td>
+			<td><pre lang="">
+5
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.probe.readiness.failureThreshold</td>
+			<td>int</td>
+			<td><pre lang="">
+3
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.probe.readiness.httpGet.path</td>
+			<td>string</td>
+			<td><pre lang="">
+'{{ include "vm.probe.http.path" . }}'
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.probe.readiness.httpGet.port</td>
+			<td>string</td>
+			<td><pre lang="">
+'{{ include "vm.probe.port" . }}'
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.probe.readiness.httpGet.scheme</td>
+			<td>string</td>
+			<td><pre lang="">
+'{{ include "vm.probe.http.scheme" . }}'
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.probe.readiness.initialDelaySeconds</td>
+			<td>int</td>
+			<td><pre lang="">
+5
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.probe.readiness.periodSeconds</td>
+			<td>int</td>
+			<td><pre lang="">
+15
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.probe.readiness.timeoutSeconds</td>
+			<td>int</td>
+			<td><pre lang="">
+5
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.probe.startup</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.remote.read.basicAuth</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+password: ""
+username: ""
+</pre>
+</td>
+			<td>Basic auth for remote read</td>
+		</tr>
+		<tr>
+			<td>server.remote.read.bearer.token</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td>Token with Bearer token. You can use one of token or tokenFile. You don't need to add "Bearer" prefix string</td>
+		</tr>
+		<tr>
+			<td>server.remote.read.bearer.tokenFile</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td>Token Auth file with Bearer token. You can use one of token or tokenFile</td>
+		</tr>
+		<tr>
+			<td>server.remote.read.url</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.remote.write.basicAuth</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+password: ""
+username: ""
+</pre>
+</td>
+			<td>Basic auth for remote write</td>
+		</tr>
+		<tr>
+			<td>server.remote.write.bearer</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+token: ""
+tokenFile: ""
+</pre>
+</td>
+			<td>Auth based on Bearer token for remote write</td>
+		</tr>
+		<tr>
+			<td>server.remote.write.bearer.token</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td>Token with Bearer token. You can use one of token or tokenFile. You don't need to add "Bearer" prefix string</td>
+		</tr>
+		<tr>
+			<td>server.remote.write.bearer.tokenFile</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td>Token Auth file with Bearer token. You can use one of token or tokenFile</td>
+		</tr>
+		<tr>
+			<td>server.remote.write.url</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.replicaCount</td>
+			<td>int</td>
+			<td><pre lang="">
+1
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.resources</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.securityContext.enabled</td>
+			<td>bool</td>
+			<td><pre lang="">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.service.annotations</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.service.clusterIP</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.service.externalIPs</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.service.labels</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.service.loadBalancerIP</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.service.loadBalancerSourceRanges</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.service.servicePort</td>
+			<td>int</td>
+			<td><pre lang="">
+8880
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.service.type</td>
+			<td>string</td>
+			<td><pre lang="">
+ClusterIP
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.strategy.rollingUpdate.maxSurge</td>
+			<td>string</td>
+			<td><pre lang="">
+25%
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.strategy.rollingUpdate.maxUnavailable</td>
+			<td>string</td>
+			<td><pre lang="">
+25%
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.strategy.type</td>
+			<td>string</td>
+			<td><pre lang="">
+RollingUpdate
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.tolerations</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.verticalPodAutoscaler</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+enabled: false
+</pre>
+</td>
+			<td>Vertical Pod Autoscaler</td>
+		</tr>
+		<tr>
+			<td>server.verticalPodAutoscaler.enabled</td>
+			<td>bool</td>
+			<td><pre lang="">
+false
+</pre>
+</td>
+			<td>Use VPA for vmalert</td>
+		</tr>
+		<tr>
+			<td>serviceAccount.annotations</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>serviceAccount.automountToken</td>
+			<td>bool</td>
+			<td><pre lang="">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>serviceAccount.create</td>
+			<td>bool</td>
+			<td><pre lang="">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>serviceAccount.name</td>
+			<td>string</td>
+			<td><pre lang="">
+null
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>serviceMonitor.annotations</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td>Service Monitor annotations</td>
+		</tr>
+		<tr>
+			<td>serviceMonitor.basicAuth</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td>Basic auth params for Service Monitor</td>
+		</tr>
+		<tr>
+			<td>serviceMonitor.enabled</td>
+			<td>bool</td>
+			<td><pre lang="">
+false
+</pre>
+</td>
+			<td>Enable deployment of Service Monitor for server component. This is Prometheus operator object</td>
+		</tr>
+		<tr>
+			<td>serviceMonitor.extraLabels</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td>Service Monitor labels</td>
+		</tr>
+		<tr>
+			<td>serviceMonitor.metricRelabelings</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td>Service Monitor metricRelabelings</td>
+		</tr>
+		<tr>
+			<td>serviceMonitor.relabelings</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td>Service Monitor relabelings</td>
+		</tr>
+	</tbody>
+</table>
+

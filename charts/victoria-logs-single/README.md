@@ -111,103 +111,929 @@ The following tables lists the configurable parameters of the chart and their de
 
 Change the values according to the need of the environment in ``victoria-logs-single/values.yaml`` file.
 
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| extraObjects | list | `[]` |  |
-| fluent-bit.config.filters | string | `"[FILTER]\n    Name kubernetes\n    Match kube.*\n    Merge_Log On\n    Keep_Log On\n    K8S-Logging.Parser On\n    K8S-Logging.Exclude On\n[FILTER]\n    Name                nest\n    Match               *\n    Wildcard            pod_name\n    Operation lift\n    Nested_under kubernetes\n    Add_prefix   kubernetes_\n"` |  |
-| fluent-bit.config.outputs | string | `"[OUTPUT]\n    Name http\n    Match kube.*\n    Host {{ include \"victoria-logs.server.fullname\" . }}\n    port 9428\n    compress gzip\n    uri /insert/jsonline?_stream_fields=stream,kubernetes_pod_name,kubernetes_container_name,kubernetes_namespace_name&_msg_field=log&_time_field=date\n    format json_lines\n    json_date_format iso8601\n    header AccountID 0\n    header ProjectID 0\n"` | Note that Host must be replaced to match your VictoriaLogs service name Default format points to VictoriaLogs service. |
-| fluent-bit.daemonSetVolumeMounts[0].mountPath | string | `"/var/log"` |  |
-| fluent-bit.daemonSetVolumeMounts[0].name | string | `"varlog"` |  |
-| fluent-bit.daemonSetVolumeMounts[1].mountPath | string | `"/var/lib/docker/containers"` |  |
-| fluent-bit.daemonSetVolumeMounts[1].name | string | `"varlibdockercontainers"` |  |
-| fluent-bit.daemonSetVolumeMounts[1].readOnly | bool | `true` |  |
-| fluent-bit.daemonSetVolumes[0].hostPath.path | string | `"/var/log"` |  |
-| fluent-bit.daemonSetVolumes[0].name | string | `"varlog"` |  |
-| fluent-bit.daemonSetVolumes[1].hostPath.path | string | `"/var/lib/docker/containers"` |  |
-| fluent-bit.daemonSetVolumes[1].name | string | `"varlibdockercontainers"` |  |
-| fluent-bit.enabled | bool | `false` | Enable deployment of fluent-bit |
-| fluent-bit.resources | object | `{}` |  |
-| global.compatibility.openshift.adaptSecurityContext | string | `"auto"` |  |
-| global.nameOverride | string | `""` |  |
-| global.victoriaLogs.server.fullnameOverride | string | `nil` | Overrides the full name of server component |
-| global.victoriaLogs.server.name | string | `"server"` | Server container name |
-| podDisruptionBudget.enabled | bool | `false` | See `kubectl explain poddisruptionbudget.spec` for more. Ref: [https://kubernetes.io/docs/tasks/run-application/configure-pdb/](https://kubernetes.io/docs/tasks/run-application/configure-pdb/) |
-| podDisruptionBudget.extraLabels | object | `{}` |  |
-| printNotes | bool | `true` | Print chart notes |
-| server.affinity | object | `{}` | Pod affinity |
-| server.containerWorkingDir | string | `""` | Container workdir |
-| server.enabled | bool | `true` | Enable deployment of server component. Deployed as StatefulSet |
-| server.env | list | `[]` | Additional environment variables (ex.: secret tokens, flags) https://github.com/VictoriaMetrics/VictoriaMetrics#environment-variables |
-| server.envFrom | list | `[]` |  |
-| server.extraArgs."envflag.enable" | string | `"true"` |  |
-| server.extraArgs."envflag.prefix" | string | `"VM_"` |  |
-| server.extraArgs.loggerFormat | string | `"json"` |  |
-| server.extraContainers | list | `[]` |  |
-| server.extraHostPathMounts | list | `[]` |  |
-| server.extraLabels | object | `{}` | Sts/Deploy additional labels |
-| server.extraVolumeMounts | list | `[]` |  |
-| server.extraVolumes | list | `[]` |  |
-| server.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
-| server.image.registry | string | `""` | Image registry |
-| server.image.repository | string | `"victoriametrics/victoria-logs"` | Image repository |
-| server.image.tag | string | `""` | Image tag |
-| server.image.variant | string | `"victorialogs"` |  |
-| server.ingress.annotations | string | `nil` | Ingress annotations |
-| server.ingress.enabled | bool | `false` | Enable deployment of ingress for server component |
-| server.ingress.extraLabels | object | `{}` | Ingress extra labels |
-| server.ingress.hosts | list | `[]` |  |
-| server.ingress.pathType | string | `"Prefix"` | pathType is only for k8s >= 1.1= |
-| server.ingress.tls | list | `[]` | Array of TLS objects |
-| server.initContainers | list | `[]` |  |
-| server.nodeSelector | object | `{}` | Pod's node selector. Ref: [https://kubernetes.io/docs/user-guide/node-selection/](https://kubernetes.io/docs/user-guide/node-selection/) |
-| server.persistentVolume.accessModes | list | `["ReadWriteOnce"]` | Array of access modes. Must match those of existing PV or dynamic provisioner. Ref: [http://kubernetes.io/docs/user-guide/persistent-volumes/](http://kubernetes.io/docs/user-guide/persistent-volumes/) |
-| server.persistentVolume.annotations | object | `{}` | Persistant volume annotations |
-| server.persistentVolume.enabled | bool | `false` | Create/use Persistent Volume Claim for server component. Empty dir if false |
-| server.persistentVolume.existingClaim | string | `""` | Existing Claim name. If defined, PVC must be created manually before volume will be bound |
-| server.persistentVolume.matchLabels | object | `{}` | Bind Persistent Volume by labels. Must match all labels of targeted PV. |
-| server.persistentVolume.mountPath | string | `"/storage"` | Mount path. Server data Persistent Volume mount root path. |
-| server.persistentVolume.size | string | `"3Gi"` | Size of the volume. Should be calculated based on the logs you send and retention policy you set. |
-| server.persistentVolume.storageClass | string | `""` | StorageClass to use for persistent volume. Requires server.persistentVolume.enabled: true. If defined, PVC created automatically |
-| server.persistentVolume.subPath | string | `""` | Mount subpath |
-| server.podAnnotations | object | `{}` | Pod's annotations |
-| server.podLabels | object | `{}` | Pod's additional labels |
-| server.podManagementPolicy | string | `"OrderedReady"` | Pod's management policy |
-| server.podSecurityContext | object | `{"enabled":true,"fsGroup":2000,"runAsNonRoot":true,"runAsUser":1000}` | Pod's security context. Ref: [https://kubernetes.io/docs/tasks/configure-pod-container/security-context/](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/) |
-| server.priorityClassName | string | `""` | Name of Priority Class |
-| server.probe.liveness.failureThreshold | int | `10` |  |
-| server.probe.liveness.initialDelaySeconds | int | `30` |  |
-| server.probe.liveness.periodSeconds | int | `30` |  |
-| server.probe.liveness.tcpSocket.port | string | `"{{ include \"vm.probe.port\" . }}"` |  |
-| server.probe.liveness.timeoutSeconds | int | `5` |  |
-| server.probe.readiness.failureThreshold | int | `3` |  |
-| server.probe.readiness.httpGet.path | string | `"{{ include \"vm.probe.http.path\" . }}"` |  |
-| server.probe.readiness.httpGet.port | string | `"{{ include \"vm.probe.port\" . }}"` |  |
-| server.probe.readiness.httpGet.scheme | string | `"{{ include \"vm.probe.http.scheme\" . }}"` |  |
-| server.probe.readiness.initialDelaySeconds | int | `5` |  |
-| server.probe.readiness.periodSeconds | int | `15` |  |
-| server.probe.readiness.timeoutSeconds | int | `5` |  |
-| server.probe.startup | object | `{}` |  |
-| server.resources | object | `{}` | Resource object. Ref: [http://kubernetes.io/docs/user-guide/compute-resources/](http://kubernetes.io/docs/user-guide/compute-resources/ |
-| server.retentionPeriod | int | `1` | Data retention period in month |
-| server.securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"enabled":true,"readOnlyRootFilesystem":true}` | Security context to be added to server pods |
-| server.service.annotations | object | `{}` | Service annotations |
-| server.service.clusterIP | string | `""` | Service ClusterIP |
-| server.service.externalIPs | list | `[]` | Service External IPs. Ref: [https://kubernetes.io/docs/user-guide/services/#external-ips]( https://kubernetes.io/docs/user-guide/services/#external-ips) |
-| server.service.labels | object | `{}` | Service labels |
-| server.service.loadBalancerIP | string | `""` | Service load balacner IP |
-| server.service.loadBalancerSourceRanges | list | `[]` | Load balancer source range |
-| server.service.servicePort | int | `9428` | Service port |
-| server.service.type | string | `"ClusterIP"` | Service type |
-| server.serviceMonitor.annotations | object | `{}` | Service Monitor annotations |
-| server.serviceMonitor.basicAuth | object | `{}` | Basic auth params for Service Monitor |
-| server.serviceMonitor.enabled | bool | `false` | Enable deployment of Service Monitor for server component. This is Prometheus operator object |
-| server.serviceMonitor.extraLabels | object | `{}` | Service Monitor labels |
-| server.serviceMonitor.metricRelabelings | list | `[]` | Service Monitor metricRelabelings |
-| server.serviceMonitor.relabelings | list | `[]` | Service Monitor relabelings |
-| server.statefulSet.enabled | bool | `true` | Creates statefulset instead of deployment, useful when you want to keep the cache |
-| server.statefulSet.podManagementPolicy | string | `"OrderedReady"` | Deploy order policy for StatefulSet pods |
-| server.statefulSet.service.annotations | object | `{}` | Headless service annotations |
-| server.statefulSet.service.labels | object | `{}` | Headless service labels |
-| server.statefulSet.service.servicePort | int | `9428` | Headless service port |
-| server.terminationGracePeriodSeconds | int | `60` | Pod's termination grace period in seconds |
-| server.tolerations | list | `[]` | Node tolerations for server scheduling to nodes with taints. Ref: [https://kubernetes.io/docs/concepts/configuration/assign-pod-node/](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) |
+<table>
+	<thead>
+		<th>Key</th>
+		<th>Type</th>
+		<th>Default</th>
+		<th>Description</th>
+	</thead>
+	<tbody>
+		<tr>
+			<td>extraObjects</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>fluent-bit.config.filters</td>
+			<td>string</td>
+			<td><pre lang="">
+|
+    [FILTER]
+        Name kubernetes
+        Match kube.*
+        Merge_Log On
+        Keep_Log On
+        K8S-Logging.Parser On
+        K8S-Logging.Exclude On
+    [FILTER]
+        Name                nest
+        Match               *
+        Wildcard            pod_name
+        Operation lift
+        Nested_under kubernetes
+        Add_prefix   kubernetes_
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>fluent-bit.config.outputs</td>
+			<td>string</td>
+			<td><pre lang="">
+|
+    [OUTPUT]
+        Name http
+        Match kube.*
+        Host {{ include "victoria-logs.server.fullname" . }}
+        port 9428
+        compress gzip
+        uri /insert/jsonline?_stream_fields=stream,kubernetes_pod_name,kubernetes_container_name,kubernetes_namespace_name&_msg_field=log&_time_field=date
+        format json_lines
+        json_date_format iso8601
+        header AccountID 0
+        header ProjectID 0
+</pre>
+</td>
+			<td>Note that Host must be replaced to match your VictoriaLogs service name Default format points to VictoriaLogs service.</td>
+		</tr>
+		<tr>
+			<td>fluent-bit.daemonSetVolumeMounts[0].mountPath</td>
+			<td>string</td>
+			<td><pre lang="">
+/var/log
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>fluent-bit.daemonSetVolumeMounts[0].name</td>
+			<td>string</td>
+			<td><pre lang="">
+varlog
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>fluent-bit.daemonSetVolumeMounts[1].mountPath</td>
+			<td>string</td>
+			<td><pre lang="">
+/var/lib/docker/containers
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>fluent-bit.daemonSetVolumeMounts[1].name</td>
+			<td>string</td>
+			<td><pre lang="">
+varlibdockercontainers
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>fluent-bit.daemonSetVolumeMounts[1].readOnly</td>
+			<td>bool</td>
+			<td><pre lang="">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>fluent-bit.daemonSetVolumes[0].hostPath.path</td>
+			<td>string</td>
+			<td><pre lang="">
+/var/log
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>fluent-bit.daemonSetVolumes[0].name</td>
+			<td>string</td>
+			<td><pre lang="">
+varlog
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>fluent-bit.daemonSetVolumes[1].hostPath.path</td>
+			<td>string</td>
+			<td><pre lang="">
+/var/lib/docker/containers
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>fluent-bit.daemonSetVolumes[1].name</td>
+			<td>string</td>
+			<td><pre lang="">
+varlibdockercontainers
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>fluent-bit.enabled</td>
+			<td>bool</td>
+			<td><pre lang="">
+false
+</pre>
+</td>
+			<td>Enable deployment of fluent-bit</td>
+		</tr>
+		<tr>
+			<td>fluent-bit.resources</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.compatibility.openshift.adaptSecurityContext</td>
+			<td>string</td>
+			<td><pre lang="">
+auto
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.nameOverride</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.victoriaLogs.server.fullnameOverride</td>
+			<td>string</td>
+			<td><pre lang="">
+null
+</pre>
+</td>
+			<td>Overrides the full name of server component</td>
+		</tr>
+		<tr>
+			<td>global.victoriaLogs.server.name</td>
+			<td>string</td>
+			<td><pre lang="">
+server
+</pre>
+</td>
+			<td>Server container name</td>
+		</tr>
+		<tr>
+			<td>podDisruptionBudget.enabled</td>
+			<td>bool</td>
+			<td><pre lang="">
+false
+</pre>
+</td>
+			<td>See `kubectl explain poddisruptionbudget.spec` for more. Ref: [https://kubernetes.io/docs/tasks/run-application/configure-pdb/](https://kubernetes.io/docs/tasks/run-application/configure-pdb/)</td>
+		</tr>
+		<tr>
+			<td>podDisruptionBudget.extraLabels</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>printNotes</td>
+			<td>bool</td>
+			<td><pre lang="">
+true
+</pre>
+</td>
+			<td>Print chart notes</td>
+		</tr>
+		<tr>
+			<td>server.affinity</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td>Pod affinity</td>
+		</tr>
+		<tr>
+			<td>server.containerWorkingDir</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td>Container workdir</td>
+		</tr>
+		<tr>
+			<td>server.enabled</td>
+			<td>bool</td>
+			<td><pre lang="">
+true
+</pre>
+</td>
+			<td>Enable deployment of server component. Deployed as StatefulSet</td>
+		</tr>
+		<tr>
+			<td>server.env</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td>Additional environment variables (ex.: secret tokens, flags) https://github.com/VictoriaMetrics/VictoriaMetrics#environment-variables</td>
+		</tr>
+		<tr>
+			<td>server.envFrom</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.extraArgs."envflag.enable"</td>
+			<td>string</td>
+			<td><pre lang="">
+"true"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.extraArgs."envflag.prefix"</td>
+			<td>string</td>
+			<td><pre lang="">
+VM_
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.extraArgs.loggerFormat</td>
+			<td>string</td>
+			<td><pre lang="">
+json
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.extraContainers</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.extraHostPathMounts</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.extraLabels</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td>Sts/Deploy additional labels</td>
+		</tr>
+		<tr>
+			<td>server.extraVolumeMounts</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.extraVolumes</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.image.pullPolicy</td>
+			<td>string</td>
+			<td><pre lang="">
+IfNotPresent
+</pre>
+</td>
+			<td>Image pull policy</td>
+		</tr>
+		<tr>
+			<td>server.image.registry</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td>Image registry</td>
+		</tr>
+		<tr>
+			<td>server.image.repository</td>
+			<td>string</td>
+			<td><pre lang="">
+victoriametrics/victoria-logs
+</pre>
+</td>
+			<td>Image repository</td>
+		</tr>
+		<tr>
+			<td>server.image.tag</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td>Image tag</td>
+		</tr>
+		<tr>
+			<td>server.image.variant</td>
+			<td>string</td>
+			<td><pre lang="">
+victorialogs
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.ingress.annotations</td>
+			<td>string</td>
+			<td><pre lang="">
+null
+</pre>
+</td>
+			<td>Ingress annotations</td>
+		</tr>
+		<tr>
+			<td>server.ingress.enabled</td>
+			<td>bool</td>
+			<td><pre lang="">
+false
+</pre>
+</td>
+			<td>Enable deployment of ingress for server component</td>
+		</tr>
+		<tr>
+			<td>server.ingress.extraLabels</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td>Ingress extra labels</td>
+		</tr>
+		<tr>
+			<td>server.ingress.hosts</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.ingress.pathType</td>
+			<td>string</td>
+			<td><pre lang="">
+Prefix
+</pre>
+</td>
+			<td>pathType is only for k8s >= 1.1=</td>
+		</tr>
+		<tr>
+			<td>server.ingress.tls</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td>Array of TLS objects</td>
+		</tr>
+		<tr>
+			<td>server.initContainers</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.nodeSelector</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td>Pod's node selector. Ref: [https://kubernetes.io/docs/user-guide/node-selection/](https://kubernetes.io/docs/user-guide/node-selection/)</td>
+		</tr>
+		<tr>
+			<td>server.persistentVolume.accessModes</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+- ReadWriteOnce
+</pre>
+</td>
+			<td>Array of access modes. Must match those of existing PV or dynamic provisioner. Ref: [http://kubernetes.io/docs/user-guide/persistent-volumes/](http://kubernetes.io/docs/user-guide/persistent-volumes/)</td>
+		</tr>
+		<tr>
+			<td>server.persistentVolume.annotations</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td>Persistant volume annotations</td>
+		</tr>
+		<tr>
+			<td>server.persistentVolume.enabled</td>
+			<td>bool</td>
+			<td><pre lang="">
+false
+</pre>
+</td>
+			<td>Create/use Persistent Volume Claim for server component. Empty dir if false</td>
+		</tr>
+		<tr>
+			<td>server.persistentVolume.existingClaim</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td>Existing Claim name. If defined, PVC must be created manually before volume will be bound</td>
+		</tr>
+		<tr>
+			<td>server.persistentVolume.matchLabels</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td>Bind Persistent Volume by labels. Must match all labels of targeted PV.</td>
+		</tr>
+		<tr>
+			<td>server.persistentVolume.mountPath</td>
+			<td>string</td>
+			<td><pre lang="">
+/storage
+</pre>
+</td>
+			<td>Mount path. Server data Persistent Volume mount root path.</td>
+		</tr>
+		<tr>
+			<td>server.persistentVolume.size</td>
+			<td>string</td>
+			<td><pre lang="">
+3Gi
+</pre>
+</td>
+			<td>Size of the volume. Should be calculated based on the logs you send and retention policy you set.</td>
+		</tr>
+		<tr>
+			<td>server.persistentVolume.storageClass</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td>StorageClass to use for persistent volume. Requires server.persistentVolume.enabled: true. If defined, PVC created automatically</td>
+		</tr>
+		<tr>
+			<td>server.persistentVolume.subPath</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td>Mount subpath</td>
+		</tr>
+		<tr>
+			<td>server.podAnnotations</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td>Pod's annotations</td>
+		</tr>
+		<tr>
+			<td>server.podLabels</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td>Pod's additional labels</td>
+		</tr>
+		<tr>
+			<td>server.podManagementPolicy</td>
+			<td>string</td>
+			<td><pre lang="">
+OrderedReady
+</pre>
+</td>
+			<td>Pod's management policy</td>
+		</tr>
+		<tr>
+			<td>server.podSecurityContext</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+enabled: true
+fsGroup: 2000
+runAsNonRoot: true
+runAsUser: 1000
+</pre>
+</td>
+			<td>Pod's security context. Ref: [https://kubernetes.io/docs/tasks/configure-pod-container/security-context/](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)</td>
+		</tr>
+		<tr>
+			<td>server.priorityClassName</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td>Name of Priority Class</td>
+		</tr>
+		<tr>
+			<td>server.probe.liveness.failureThreshold</td>
+			<td>int</td>
+			<td><pre lang="">
+10
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.probe.liveness.initialDelaySeconds</td>
+			<td>int</td>
+			<td><pre lang="">
+30
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.probe.liveness.periodSeconds</td>
+			<td>int</td>
+			<td><pre lang="">
+30
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.probe.liveness.tcpSocket.port</td>
+			<td>string</td>
+			<td><pre lang="">
+'{{ include "vm.probe.port" . }}'
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.probe.liveness.timeoutSeconds</td>
+			<td>int</td>
+			<td><pre lang="">
+5
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.probe.readiness.failureThreshold</td>
+			<td>int</td>
+			<td><pre lang="">
+3
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.probe.readiness.httpGet.path</td>
+			<td>string</td>
+			<td><pre lang="">
+'{{ include "vm.probe.http.path" . }}'
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.probe.readiness.httpGet.port</td>
+			<td>string</td>
+			<td><pre lang="">
+'{{ include "vm.probe.port" . }}'
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.probe.readiness.httpGet.scheme</td>
+			<td>string</td>
+			<td><pre lang="">
+'{{ include "vm.probe.http.scheme" . }}'
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.probe.readiness.initialDelaySeconds</td>
+			<td>int</td>
+			<td><pre lang="">
+5
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.probe.readiness.periodSeconds</td>
+			<td>int</td>
+			<td><pre lang="">
+15
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.probe.readiness.timeoutSeconds</td>
+			<td>int</td>
+			<td><pre lang="">
+5
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.probe.startup</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>server.resources</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td>Resource object. Ref: [http://kubernetes.io/docs/user-guide/compute-resources/](http://kubernetes.io/docs/user-guide/compute-resources/</td>
+		</tr>
+		<tr>
+			<td>server.retentionPeriod</td>
+			<td>int</td>
+			<td><pre lang="">
+1
+</pre>
+</td>
+			<td>Data retention period in month</td>
+		</tr>
+		<tr>
+			<td>server.securityContext</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+allowPrivilegeEscalation: false
+capabilities:
+    drop:
+        - ALL
+enabled: true
+readOnlyRootFilesystem: true
+</pre>
+</td>
+			<td>Security context to be added to server pods</td>
+		</tr>
+		<tr>
+			<td>server.service.annotations</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td>Service annotations</td>
+		</tr>
+		<tr>
+			<td>server.service.clusterIP</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td>Service ClusterIP</td>
+		</tr>
+		<tr>
+			<td>server.service.externalIPs</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td>Service External IPs. Ref: [https://kubernetes.io/docs/user-guide/services/#external-ips]( https://kubernetes.io/docs/user-guide/services/#external-ips)</td>
+		</tr>
+		<tr>
+			<td>server.service.labels</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td>Service labels</td>
+		</tr>
+		<tr>
+			<td>server.service.loadBalancerIP</td>
+			<td>string</td>
+			<td><pre lang="">
+""
+</pre>
+</td>
+			<td>Service load balacner IP</td>
+		</tr>
+		<tr>
+			<td>server.service.loadBalancerSourceRanges</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td>Load balancer source range</td>
+		</tr>
+		<tr>
+			<td>server.service.servicePort</td>
+			<td>int</td>
+			<td><pre lang="">
+9428
+</pre>
+</td>
+			<td>Service port</td>
+		</tr>
+		<tr>
+			<td>server.service.type</td>
+			<td>string</td>
+			<td><pre lang="">
+ClusterIP
+</pre>
+</td>
+			<td>Service type</td>
+		</tr>
+		<tr>
+			<td>server.serviceMonitor.annotations</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td>Service Monitor annotations</td>
+		</tr>
+		<tr>
+			<td>server.serviceMonitor.basicAuth</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td>Basic auth params for Service Monitor</td>
+		</tr>
+		<tr>
+			<td>server.serviceMonitor.enabled</td>
+			<td>bool</td>
+			<td><pre lang="">
+false
+</pre>
+</td>
+			<td>Enable deployment of Service Monitor for server component. This is Prometheus operator object</td>
+		</tr>
+		<tr>
+			<td>server.serviceMonitor.extraLabels</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td>Service Monitor labels</td>
+		</tr>
+		<tr>
+			<td>server.serviceMonitor.metricRelabelings</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td>Service Monitor metricRelabelings</td>
+		</tr>
+		<tr>
+			<td>server.serviceMonitor.relabelings</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td>Service Monitor relabelings</td>
+		</tr>
+		<tr>
+			<td>server.statefulSet.enabled</td>
+			<td>bool</td>
+			<td><pre lang="">
+true
+</pre>
+</td>
+			<td>Creates statefulset instead of deployment, useful when you want to keep the cache</td>
+		</tr>
+		<tr>
+			<td>server.statefulSet.podManagementPolicy</td>
+			<td>string</td>
+			<td><pre lang="">
+OrderedReady
+</pre>
+</td>
+			<td>Deploy order policy for StatefulSet pods</td>
+		</tr>
+		<tr>
+			<td>server.statefulSet.service.annotations</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td>Headless service annotations</td>
+		</tr>
+		<tr>
+			<td>server.statefulSet.service.labels</td>
+			<td>object</td>
+			<td><pre lang="plaintext">
+{}
+</pre>
+</td>
+			<td>Headless service labels</td>
+		</tr>
+		<tr>
+			<td>server.statefulSet.service.servicePort</td>
+			<td>int</td>
+			<td><pre lang="">
+9428
+</pre>
+</td>
+			<td>Headless service port</td>
+		</tr>
+		<tr>
+			<td>server.terminationGracePeriodSeconds</td>
+			<td>int</td>
+			<td><pre lang="">
+60
+</pre>
+</td>
+			<td>Pod's termination grace period in seconds</td>
+		</tr>
+		<tr>
+			<td>server.tolerations</td>
+			<td>list</td>
+			<td><pre lang="plaintext">
+[]
+</pre>
+</td>
+			<td>Node tolerations for server scheduling to nodes with taints. Ref: [https://kubernetes.io/docs/concepts/configuration/assign-pod-node/](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/)</td>
+		</tr>
+	</tbody>
+</table>
+

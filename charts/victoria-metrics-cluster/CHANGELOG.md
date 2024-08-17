@@ -10,6 +10,9 @@
 - Updated `.Values.vmbackupmanager.readinessProbe` to `.Values.vmbackupmanager.probe.readiness`
 - Updated `.Values.vmbackupmanager.livenessProbe` to `.Values.vmbackupmanager.probe.liveness`
 - Updated `.Values.vmbackupmanager.startupProbe` to `.Values.vmbackupmanager.probe.startup`
+- Added global imagePullSecrets and image.registry
+- Fix templating of Ingress port when using custom port name.
+- Added `.Values.vmselect.emptyDir` and `.Values.vmstorage.emptyDir` to customize default cache directory
 
 ## 0.11.23
 

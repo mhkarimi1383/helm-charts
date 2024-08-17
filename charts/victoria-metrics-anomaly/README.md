@@ -705,4 +705,3 @@ false
 		</tr>
 	</tbody>
 </table>
-

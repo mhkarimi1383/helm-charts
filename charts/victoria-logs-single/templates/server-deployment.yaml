@@ -37,6 +37,9 @@ spec:
       {{- if eq (include "victoria-logs.hasInitContainer" . ) "true" -}}
       initContainers: {{ include "victoria-logs.initContiners" . | nindent 8 }}
       {{- end }}
+      {{- with ($app.imagePullSecrets | default .Values.global.imagePullSecrets) }}
+      imagePullSecrets: {{ . }}
+      {{- end }}
       containers:
         - name: {{ template "victoria-logs.name" . }}-{{ .Values.global.victoriaLogs.server.name }}
           {{- if $app.securityContext.enabled }}
@@ -119,14 +122,14 @@ spec:
       {{- end }}
       terminationGracePeriodSeconds: {{ $app.terminationGracePeriodSeconds }}
       volumes:
-      {{- with $app.extraVolumes }}
-      {{- toYaml . | nindent 6 }}
-      {{- end }}
-      - name: server-volume
-      {{- if $app.persistentVolume.enabled }}
-        persistentVolumeClaim:
-          claimName: {{ if $app.persistentVolume.existingClaim }}{{ $app.persistentVolume.existingClaim }}{{- else }}{{ template "victoria-logs.server.fullname" . }}{{- end }}
-      {{- else }}
-        emptyDir: {}
-      {{- end }}
+        {{- with $app.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        - name: server-volume
+        {{- if $app.persistentVolume.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ if $app.persistentVolume.existingClaim }}{{ $app.persistentVolume.existingClaim }}{{- else }}{{ template "victoria-logs.server.fullname" . }}{{- end }}
+        {{- else }}
+          emptyDir: {{ toYaml $app.emptyDir | nindent 12 }}
+        {{- end }}
 {{- end }}

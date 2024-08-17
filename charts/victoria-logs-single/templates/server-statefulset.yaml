@@ -34,6 +34,9 @@ spec:
       {{- if eq (include "victoria-logs.hasInitContainer" . ) "true" }}
       initContainers: {{ include "victoria-logs.initContiners" . | nindent 8 }}
       {{- end }}
+      {{- with ($app.imagePullSecrets | default .Values.global.imagePullSecrets) }}
+      imagePullSecrets: {{ . }}
+      {{- end }}
       containers:
         - name: {{ template "victoria-logs.name" . }}-{{ .Values.global.victoriaLogs.server.name }}
           {{- if $app.securityContext.enabled }}
@@ -118,7 +121,7 @@ spec:
       volumes:
         {{- if not $app.persistentVolume.enabled }}
         - name: server-volume
-          emptyDir: {}
+          emptyDir: {{ toYaml $app.emptyDir | nindent 12 }}
         {{- else }}
         {{- with $app.persistentVolume.existingClaim }}
         - name: server-volume

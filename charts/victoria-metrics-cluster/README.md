@@ -2774,4 +2774,3 @@ keepLastWeekly: 2
 		</tr>
 	</tbody>
 </table>
-
